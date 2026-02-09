@@ -1,0 +1,225 @@
+/* StationLogin.css - Tema Claro Corporativo */
+:root {
+    /* Copiamos las mismas variables para asegurar consistencia */
+    --dispro-bg: hsl(30, 100%, 97%);
+    --dispro-card: #ffffff;
+    --dispro-border: #fda500;
+    --dispro-text: hsl(0 0% 15%);
+    --dispro-muted: hsl(0 0% 45%);
+    --primary: #f6b53b;
+    --destructive: hsl(0 72% 51%);
+    --info: hsl(180 64% 45%);
+    --accent: hsl(264 67% 60%);
+    --success: hsl(142 76% 36%);
+}
+
+.login-screen {
+    min-height: 100vh;
+    background-color: var(--dispro-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--dispro-text);
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.back-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background: white;
+    border: 1px solid var(--dispro-border);
+    color: var(--dispro-text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-btn:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-card-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-logo {
+    background: var(--primary);
+    width: 60px;
+    height: 60px;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: white;
+    /* Icono blanco */
+    box-shadow: 0 10px 20px rgba(246, 181, 59, 0.3);
+}
+
+.login-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: -0.05em;
+}
+
+.station-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Clases de utilidad para colores de fondo (igual que operations.css) */
+.bg-primary {
+    background: linear-gradient(135deg, #f6b53b, #f0c24e);
+}
+
+.bg-destructive {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+.bg-info {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.bg-accent {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.login-form {
+    background: var(--dispro-card);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--dispro-border);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.form-info {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dispro-muted);
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dispro-muted);
+}
+
+.input-wrapper input {
+    width: 85%;
+    padding: 12px 15px 12px 45px;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    color: var(--dispro-text);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(246, 181, 59, 0.2);
+}
+
+.toggle-pw {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--dispro-muted);
+    padding: 0;
+    display: flex;
+}
+
+.toggle-pw:hover {
+    color: var(--dispro-text);
+}
+
+.login-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #f6b53b, #f0c24e);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    /* Texto blanco en botón primario */
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(246, 181, 59, 0.4);
+}
+
+.login-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(246, 181, 59, 0.5);
+}
+
+.login-submit:active {
+    transform: translateY(0);
+}
+
+.error-msg {
+    background-color: #fef2f2;
+    color: #ef4444;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid #fecaca;
+}

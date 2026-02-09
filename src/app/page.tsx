@@ -45,7 +45,7 @@ export default function OperacionesPage() {
 
       <header className="op-header">
         <div className="op-logo-box">
-          <Beef size={60} strokeWidth={2.5} />
+          <Beef size={60} strokeWidth={2.5} color='white' />
         </div>
         <h1 className="op-title">Disprocar</h1>
         <p className="op-subtitle">Panel de Control de Operaciones</p>

@@ -1,46 +1,52 @@
 /* Variables de la Marca Disprocar */
 :root {
-    --dispro-bg: #0f172a;
-    --dispro-card: #1e293b;
-    --dispro-border: #334155;
-    --dispro-text: #f8fafc;
-    --dispro-muted: #94a3b8;
-    --primary: #3b82f6;
-    --destructive: #ef4444;
-    --info: #06b6d4;
-    --accent: #8b5cf6;
-    --success: #22c55e;
+    --dispro-bg: hsl(30, 100%, 97%);
+    --dispro-card: #ffffff;
+    --dispro-border: #fda500;
+    --dispro-text: hsl(0 0% 15%);
+    --dispro-muted: hsl(0 0% 45%);
+    --primary: #f6b53b;
+    --destructive: hsl(0 72% 51%);
+    --info: hsl(180 64% 45%);
+    --accent: hsl(264 67% 60%);
+    --success: hsl(142 76% 36%);
 }
 
 .op-screen {
     min-height: 100vh;
     background-color: var(--dispro-bg);
-    color: var(--dispro-text);
+    color: rgb(0, 0, 0);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 1rem;
     font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
 }
 
 /* Header Superior */
 .op-header {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 3.5rem;
+    /* Reducido de 4rem */
 }
 
 .op-logo-box {
     display: inline-flex;
-    padding: 1.5rem;
+    padding: 1rem;
+    /* Reducido de 1.5rem */
     background: var(--primary);
-    border-radius: 1.5rem;
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    /* Reducido de 1.5rem */
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    margin-bottom: 1rem;
+    /* Reducido de 1.5rem */
 }
 
 .op-title {
-    font-size: 3.5rem;
+    font-size: 2rem;
+    /* Reducido de 3.5rem */
     font-weight: 800;
     letter-spacing: -0.05em;
     margin: 0;
@@ -49,27 +55,34 @@
 
 .op-subtitle {
     color: var(--dispro-muted);
-    font-size: 1.5rem;
-    margin-top: 0.5rem;
+    font-size: 1rem;
+    /* Reducido de 1.5rem */
+    margin-top: 0.25rem;
+    /* Reducido de 0.5rem */
 }
 
 /* Grid Principal */
 .op-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 1rem;
+    /* Reducido de 2rem */
     width: 100%;
-    max-width: 1100px;
+    max-width: 800px;
+    /* Reducido de 1100px para mantener proporciones */
 }
 
 .op-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 3.5rem 2rem;
+    padding: 4rem 2rem;
+    /* Reducido de 3.5rem 2rem */
     background: var(--dispro-card);
-    border: 2px solid var(--dispro-border);
+    border: 1px solid var(--dispro-border);
+    /* Reducido grosor borde */
     border-radius: 2rem;
+    /* Reducido de 2rem */
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
@@ -77,29 +90,35 @@
 }
 
 .op-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-4px);
+    /* Reducido de -8px */
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    /* Sombra más suave */
 }
 
 .op-card:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
 }
 
 /* Iconos y Colores */
 .op-icon-circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 1.5rem;
+    width: 80px;
+    /* Reducido de 100px */
+    height: 80px;
+    /* Reducido de 100px */
+    border-radius: 1rem;
+    /* Reducido */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
+    /* Reducido de 1.5rem */
     color: white;
 }
 
 .bg-primary {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: linear-gradient(135deg, #f6b53b, #f0c24e);
 }
 
 .bg-destructive {
@@ -115,37 +134,42 @@
 }
 
 .op-card-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    /* Reducido de 2rem */
     font-weight: 700;
-    color: white;
+    color: rgb(0, 0, 0);
     margin: 0;
 }
 
 .op-card-desc {
     color: var(--dispro-muted);
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
+    font-size: 1rem;
+    /* Reducido de 1.1rem */
+    margin-top: 0.25rem;
     text-align: center;
 }
 
 .op-footer-nav {
-    margin-top: 5rem;
+    margin-top: 2rem;
+    /* Reducido de 5rem */
     color: var(--dispro-muted);
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--dispro-border);
     cursor: pointer;
     padding: 5px;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    /* Reducido de 1.1rem */
 }
 
 /* Responsive para tablets */
 @media (max-width: 768px) {
     .op-grid {
         grid-template-columns: 1fr;
+        max-width: 400px;
     }
 
     .op-title {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
     }
 }
