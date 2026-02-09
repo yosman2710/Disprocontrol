@@ -1,66 +1,77 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"; // Necesario para que Link y el renderizado funcionen correctamente en este caso
 
-export default function Home() {
+import Link from 'next/link';
+import { Ticket, Flame, Snowflake, Scissors, Beef } from 'lucide-react';
+import '../styles/operations.css';
+
+const sections = [
+  {
+    title: 'Registrar Orden',
+    description: 'Orden de ingreso de reses',
+    icon: Ticket,
+    path: '/order',
+    colorClass: 'bg-primary',
+  },
+  {
+    title: 'Peso Caliente',
+    description: 'Báscula de sacrificio',
+    icon: Flame,
+    path: '/heavy_hot',
+    colorClass: 'bg-destructive',
+  },
+  {
+    title: 'Peso Frío',
+    description: 'Salida de cava fría',
+    icon: Snowflake,
+    path: '/heavy_cold',
+    colorClass: 'bg-info',
+  },
+  {
+    title: 'Deshuesado',
+    description: 'Control de cortes y mermas',
+    icon: Scissors,
+    path: '/boner',
+    colorClass: 'bg-accent',
+  },
+];
+
+export default function OperacionesPage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="op-screen">
+      {/* Indicador de Status arriba a la derecha opcional */}
+      <div style={{ position: 'absolute', top: 20, right: 40, color: '#22c55e', fontWeight: 'bold' }}>
+        ● SISTEMA ONLINE
+      </div>
+
+      <header className="op-header">
+        <div className="op-logo-box">
+          <Beef size={60} strokeWidth={2.5} />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <h1 className="op-title">Disprocar</h1>
+        <p className="op-subtitle">Panel de Control de Operaciones</p>
+      </header>
+
+      <main className="op-grid">
+        {sections.map((section) => (
+          <Link
+            key={section.path}
+            href={section.path}
+            className="op-card"
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            <div className={`op-icon-circle ${section.colorClass}`}>
+              <section.icon size={48} />
+            </div>
+            <h2 className="op-card-title">{section.title}</h2>
+            <p className="op-card-desc">{section.description}</p>
+          </Link>
+        ))}
       </main>
+
+      <Link href="/admin/dashboard">
+        <button className="op-footer-nav">
+          Acceder al Dashboard Administrativo
+        </button>
+      </Link>
     </div>
   );
 }
