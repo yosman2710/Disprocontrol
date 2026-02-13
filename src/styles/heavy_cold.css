@@ -1,0 +1,165 @@
+/* heavy_cold.css - Based on hot-weight.css but with cold theme */
+:root {
+    --primary: #2c5282;
+    /* Azul Oscuro */
+    --primary-light: #bee3f8;
+    /* Azul claro suave */
+    --bg-app: #f0f4f8;
+    /* Fondo azulado grisaceo */
+    --card-bg: #ffffff;
+    --text-main: #2D3748;
+    --text-muted: #718096;
+    --border: #E2E8F0;
+    --warning: #3182ce;
+    /* Azul en lugar de Naranja */
+    --warning-bg: #ebf8ff;
+    --purple: #805AD5;
+}
+
+body {
+    background-color: var(--bg-app);
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.container-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Header --- */
+.header-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.icon-box {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-titles h1 {
+    font-size: 24px;
+    margin: 0;
+    font-family: 'Georgia', serif;
+    color: var(--primary);
+}
+
+.header-titles p {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* --- Buscador --- */
+.search-container {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    box-sizing: border-box;
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+}
+
+.search-icon-pos {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+/* --- Stats Cards (Resumen) --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.stat-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* --- Lista de Tickets --- */
+.ticket-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ticket-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e0;
+}
+
+/* --- List Styles Helpers --- */
+.data-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.res-count {
+    font-weight: bold;
+    color: #2d3748;
+    font-size: 16px;
+}
+
+.res-label {
+    font-size: 10px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #718096;
+}

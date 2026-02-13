@@ -1,0 +1,375 @@
+.workstation-container {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Detail Header Card */
+.detail-header-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.header-top-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.back-btn-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f5f9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.back-btn-circle:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.ticket-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket-id-title {
+    color: #641B2E;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.status-label-sub {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.info-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-item label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.summary-item span {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.temp-val {
+    color: #f59e0b;
+}
+
+/* Process Flow Card */
+.process-flow-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 24px;
+}
+
+.flow-steps-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.step-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    color: #cbd5e1;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active {
+    border-color: #641B2E;
+    color: #641B2E;
+    background: #fdf2f4;
+    box-shadow: 0 0 0 4px #fff5f7;
+}
+
+.step-circle.done {
+    background: #fdf2f4;
+    border-color: #641B2E;
+    color: #641B2E;
+}
+
+.flow-step.disabled .step-circle {
+    opacity: 0.5;
+}
+
+.step-label {
+    font-size: 12px;
+    color: #718096;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.step-count {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+/* Progress Bars */
+.progress-bars-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f7fafc;
+}
+
+.progress-group {
+    flex: 1;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #718096;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.progress-track {
+    height: 8px;
+    background: #edf2f7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: #cbd5e1;
+    transition: width 0.5s ease;
+}
+
+.progress-fill.hot {
+    background: #DD6B20;
+}
+
+.progress-fill.cold {
+    background: #3182ce;
+}
+
+/* Individual Status */
+.individual-status-section {
+    border-top: 1px solid #f7fafc;
+    padding-top: 20px;
+}
+
+.status-label-small {
+    display: block;
+    font-size: 11px;
+    color: #a0aec0;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.status-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #f7fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a0aec0;
+    border: 1px solid transparent;
+}
+
+.status-box.active {
+    border-color: #641B2E;
+    color: #641B2E;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-box.completed {
+    background: #fff5f7;
+    color: #641B2E;
+    border-color: #fbd38d;
+}
+
+/* Main Work Grid */
+.main-work-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+}
+
+/* Res Side Inventory (Right Side) */
+.res-side-inventory {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    height: fit-content;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.inventory-header {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+}
+
+.count-pill {
+    background: #e2e8f0;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: #475569;
+    font-weight: 600;
+}
+
+.inventory-list {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.inventory-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.inventory-item:hover {
+    background: #f8fafc;
+}
+
+.inventory-item.is-current {
+    border-color: #fbd38d;
+    background: #fffaf0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.res-id-box {
+    width: 32px;
+    height: 32px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+}
+
+.inventory-item.is-current .res-id-box {
+    background: #DD6B20;
+    color: white;
+}
+
+.res-data {
+    flex: 1;
+}
+
+.res-data h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.res-data p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.check-done {
+    color: #10b981;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
