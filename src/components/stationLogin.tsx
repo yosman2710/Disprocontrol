@@ -2,10 +2,9 @@
 
 import { useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { Beef, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Beef, ArrowLeft, Lock, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import '../styles/StationLogin.css';
-
 
 interface StationLoginProps {
     stationName: string;
@@ -17,115 +16,90 @@ interface StationLoginProps {
 
 export function StationLogin({ stationName, stationIcon, stationColor, targetRole, children }: StationLoginProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [usuario, setUsuario] = useState('');
-    const [contrasena, setContrasena] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
-    // 1. Persistencia: Revisar si ya está logueado al cargar
     useEffect(() => {
         const userStr = localStorage.getItem('dispro_user');
-        if (userStr) {
-            const user = JSON.parse(userStr);
-            if (user.role === 'admin' || user.role === targetRole) {
-                setIsAuthenticated(true);
-            }
+        if (!userStr) {
+            router.push('/login');
+            return;
         }
-    }, [targetRole]);
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
-        try {
-            const res = await fetch('http://localhost:3001/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: usuario, password: contrasena }),
-            });
+        const user = JSON.parse(userStr);
+        if (user.role === 'admin' || user.role === targetRole) {
+            setIsAuthenticated(true);
+            setIsLoading(false);
+        } else {
+            toast.error(`No tienes permiso para el área: ${stationName}`);
+            // Si no es admin y no es su área, lo mandamos a su área correspondiente o al login
+            redirectByRole(user.role);
+        }
+    }, [targetRole, router, stationName]);
 
-            const data = await res.json(); // Aquí recibes tu JSON con token y user
-
-            if (res.ok) {
-                // Validar si es Admin o el rol de la estación
-                if (data.user.role === 'admin' || data.user.role === targetRole) {
-                    localStorage.setItem('dispro_token', data.token);
-                    localStorage.setItem('dispro_user', JSON.stringify(data.user));
-                    setIsAuthenticated(true);
-                    toast.success(`Acceso concedido como ${data.user.role}`);
-                } else {
-                    const area = data.user.role === 'pesador_caliente' ? 'Peso Caliente' : data.user.role === 'pesador_frio' ? 'Peso Frio' : 'Deshuesado';
-                    toast.error(`No tienes permiso para esta área. Eres del area de: ${area}`);
-                    setError(`No tienes permiso para esta área. Eres del area de: ${area}`);
-                }
-            } else {
-                toast.error(data.message || 'Credenciales incorrectas');
-                setError(data.message || 'Credenciales incorrectas');
-            }
-        } catch (err) {
-            toast.error('Error de conexión con el servidor');
-            setError('Error de conexión con el servidor');
+    const redirectByRole = (role: string) => {
+        switch (role) {
+            case 'pesador_caliente':
+                router.push('/heavy_hot');
+                break;
+            case 'pesador_frio':
+                router.push('/heavy_cold');
+                break;
+            case 'deshuesador':
+                router.push('/boner');
+                break;
+            case 'registrador':
+                router.push('/order');
+                break;
+            default:
+                router.push('/login');
         }
     };
 
-    if (isAuthenticated) return <>{children}</>;
+    const handleLogout = () => {
+        localStorage.removeItem('dispro_user');
+        localStorage.removeItem('dispro_token');
+        router.push('/login');
+        toast.info('Sesión cerrada');
+    };
+
+    if (isLoading) {
+        return (
+            <div className="login-screen">
+                <div className="login-card-container" style={{ textAlign: 'center', padding: '40px' }}>
+                    <Beef size={48} className="animate-bounce" color="#641B2E" />
+                    <p style={{ marginTop: '20px', color: '#64748b' }}>Verificando acceso...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) return null;
 
     return (
-        <div className="login-screen">
-            <button onClick={() => router.push('/')} className="back-btn">
-                <ArrowLeft size={20} /> Volver
+        <>
+            {/* Botón de Logout (esquina superior derecha) */}
+            <button
+                onClick={handleLogout}
+                className="logout-btn"
+                style={{ position: 'fixed', top: '20px', right: '40px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: '#fef2f2', border: '1px solid #fee2e2', color: '#991b1b', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
+            >
+                <LogOut size={18} />
+                Cerrar Sesión
             </button>
-            <div className="login-card-container">
-                <header className="login-header">
-                    <div className="login-logo">
-                        <Beef size={32} color="white" />
-                    </div>
-                    <h1 className="login-title">DisproControl</h1>
-                </header>
 
-                <div className={`station-badge ${stationColor}`}>
-                    {stationIcon}
-                    <span>{stationName}</span>
-                </div>
-
-                <form onSubmit={handleLogin} className="login-form">
-                    <div className="form-info">
-                        <Lock size={24} />
-                        <p>Ingrese credenciales de estación</p>
-                    </div>
-
-                    {error && <div className="error-msg">{error}</div>}
-
-                    <div className="input-group">
-                        <label>Email o Usuario</label>
-                        <div className="input-wrapper">
-                            <User className="input-icon" size={20} />
-                            <input
-                                type="text"
-                                value={usuario}
-                                onChange={(e) => setUsuario(e.target.value)}
-                                placeholder="usuario@gmail.com"
-                            />
-                        </div>
-                    </div>
-                    <div className="input-group">
-                        <label>Contraseña</label>
-                        <div className="input-wrapper">
-                            <Lock className="input-icon" size={20} />
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                value={contrasena}
-                                onChange={(e) => setContrasena(e.target.value)}
-                                placeholder="••••••••"
-                            />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-pw">
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </button>
-                        </div>
-                    </div>
-                    <button type="submit" className="login-submit">INGRESAR</button>
-                </form>
-            </div>
-        </div>
+            {/* Botón flotante para volver (solo admin) */}
+            {JSON.parse(localStorage.getItem('dispro_user') || '{}').role === 'admin' && (
+                <button
+                    onClick={() => router.push('/')}
+                    className="back-btn"
+                    style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: 'white', border: '1px solid #e2e8f0', color: '#475569', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
+                >
+                    <ArrowLeft size={20} />
+                    Panel Principal
+                </button>
+            )}
+            {children}
+        </>
     );
 }

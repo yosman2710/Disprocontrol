@@ -68,6 +68,28 @@ body {
     animation: fadeIn 0.6s ease-out;
 }
 
+.btnBack {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(100, 27, 46, 0.2);
+}
+
+.btnBack:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(100, 27, 46, 0.3);
+}
+
+.btnBack:active {
+    transform: translateY(0);
+}
+
 .title h1 {
     font-family: 'Playfair Display', serif;
     font-size: 3rem;
@@ -94,6 +116,8 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(100, 27, 46, 0.2);
+    display: flex;
+    align-items: center;
 }
 
 .btnNuevo:hover {
@@ -171,17 +195,20 @@ body {
     letter-spacing: 0.05em;
 }
 
-.completado {
+.completado,
+.COMPLETADO {
     background: #def7ec;
     color: #03543f;
 }
 
-.congelador {
+.congelador,
+.CONGELADOR {
     background: #fff8f1;
     color: #9c4221;
 }
 
-.pendiente {
+.pendiente,
+.PENDIENTE {
     background: #edf2f7;
     color: #2d3748;
 }
@@ -336,22 +363,26 @@ body {
     gap: 16px;
 }
 
-.resItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Tarjeta de Res individual */
+.resCard {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
     padding: 24px;
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    transition: all 0.2s;
     cursor: pointer;
-    background: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.resItem:hover {
-    border-color: var(--primary-color);
-    transform: translateX(5px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.resCard:hover {
+    border-color: var(--primary-color) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(100, 27, 46, 0.1), 0 10px 10px -5px rgba(100, 27, 46, 0.04) !important;
+}
+
+.resCard:active {
+    transform: scale(0.98);
 }
 
 .resInfo {
@@ -371,17 +402,34 @@ body {
     font-size: 1.5rem;
 }
 
-.weightLabel {
-    display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-    font-weight: 600;
+.btnNuevo:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-.weightVal {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--text-color);
+@media (max-width: 992px) {
+    .detailHeaderInfo {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .title h1 {
+        font-size: 2.2rem;
+    }
+
+    .modal {
+        padding: 24px;
+        border-radius: 20px;
+    }
 }

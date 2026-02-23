@@ -1,7 +1,9 @@
-"use client"; // Necesario para que Link y el renderizado funcionen correctamente en este caso
+"use client";
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Ticket, Flame, Snowflake, Scissors, Beef } from 'lucide-react';
+import { Ticket, Flame, Snowflake, Scissors, Beef, LogOut } from 'lucide-react';
 import '../styles/operations.css';
 
 const sections = [
@@ -36,11 +38,65 @@ const sections = [
 ];
 
 export default function OperacionesPage() {
+  const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('dispro_user');
+    if (!userStr) {
+      router.push('/login');
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    if (user.role !== 'admin') {
+      // Redirigir a su sección correspondiente
+      switch (user.role) {
+        case 'pesador_caliente':
+          router.push('/heavy_hot');
+          break;
+        case 'pesador_frio':
+          router.push('/heavy_cold');
+          break;
+        case 'deshuesador':
+          router.push('/boner');
+          break;
+        case 'registrador':
+          router.push('/order');
+          break;
+        default:
+          router.push('/login');
+      }
+    } else {
+      setIsAdmin(true);
+      setLoading(false);
+    }
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('dispro_user');
+    localStorage.removeItem('dispro_token');
+    router.push('/login');
+  };
+
+  if (loading) return null;
+  if (!isAdmin) return null;
+
   return (
     <div className="op-screen">
-      {/* Indicador de Status arriba a la derecha opcional */}
-      <div style={{ position: 'absolute', top: 20, right: 40, color: '#22c55e', fontWeight: 'bold' }}>
-        ● SISTEMA ONLINE
+      {/* Indicador de Status y Logout arriba a la derecha */}
+      <div style={{ position: 'absolute', top: 20, right: 40, display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '14px' }}>
+          ● SISTEMA ONLINE
+        </div>
+        <button
+          onClick={handleLogout}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fef2f2', border: '1px solid #fee2e2', color: '#991b1b', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+        >
+          <LogOut size={18} />
+          Cerrar Sesión
+        </button>
       </div>
 
       <header className="op-header">
