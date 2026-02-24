@@ -42,6 +42,16 @@ export function AdminSidebar() {
             </div>
 
             <nav className="admin-sidebar-nav">
+                <Link
+                    href="/"
+                    className="admin-nav-item"
+                    style={{ marginBottom: '16px', borderBottom: '1px solid #2d2d2d', borderRadius: '0', paddingBottom: '16px' }}
+                    title={isCollapsed ? 'Volver a Operaciones' : undefined}
+                >
+                    <LayoutDashboard style={{ color: '#10b981' }} />
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>Sección Principal</span>
+                </Link>
+
                 {menuItems.map((item) => {
                     const isActive = pathname === item.path;
                     return (
