@@ -93,26 +93,23 @@ export default function BonerPage() {
             return;
         }
 
-        const idNumerico = parseInt(tipoCorte);
-        if (isNaN(idNumerico)) {
-            console.error('Error: ID de corte no es un número válido:', tipoCorte);
-            toast.error('Error interno: El tipo de corte no es válido');
+        const tipoSeleccionado = tiposCorte.find(t => t.id.toString() === tipoCorte);
+        if (!tipoSeleccionado) {
+            toast.error('Tipo de corte no encontrado');
             return;
         }
 
-        const tipoSeleccionado = tiposCorte.find(t => t.id.toString() === tipoCorte);
-
         const nuevoCorte = {
-            id: Date.now(), // Temp ID
-            tipo_corte_id: idNumerico,
-            tipo_nombre: tipoSeleccionado?.nombre || 'Desconocido',
+            id: Date.now(), // Temp ID for list identification
+            tipo_corte_id: tipoSeleccionado.id, // This is a UUID string
+            tipo_nombre: tipoSeleccionado.nombre,
             clasificacion,
             peso
         };
 
         console.log('Agregando corte temporal:', nuevoCorte);
         setCortesTemp([...cortesTemp, nuevoCorte]);
-        toast.success(`${tipoSeleccionado?.nombre || 'Corte'} agregado: ${peso} kg`);
+        toast.success(`${tipoSeleccionado.nombre} agregado: ${peso} kg`);
     };
 
     const handleRemoveCut = (id: number) => {
@@ -145,7 +142,11 @@ export default function BonerPage() {
         const currentRes = carcasses[currentResIndex];
 
         try {
-            const validCuts = cortesTemp.filter(c => !isNaN(c.tipo_corte_id) && c.tipo_corte_id !== null);
+            const validCuts = cortesTemp.map(c => ({
+                tipo_corte_id: c.tipo_corte_id,
+                clasificacion: c.clasificacion,
+                peso: c.peso
+            }));
 
             if (validCuts.length === 0) {
                 toast.error('No hay cortes válidos para registrar');
@@ -154,16 +155,12 @@ export default function BonerPage() {
 
             const payload = {
                 id: currentRes.id,
-                cortes: validCuts.map(c => ({
-                    tipo_corte_id: c.tipo_corte_id,
-                    clasificacion: c.clasificacion,
-                    peso: c.peso
-                }))
+                cortes: validCuts
             };
 
             console.log('Enviando datos de deshuese final:', payload);
-            if (payload.cortes.some(c => c.tipo_corte_id === null || isNaN(c.tipo_corte_id))) {
-                console.error('CRÍTICO: El payload contiene IDs nulos o NaN:', payload);
+            if (payload.cortes.some(c => !c.tipo_corte_id)) {
+                console.error('CRÍTICO: El payload contiene IDs nulos:', payload);
                 toast.error('Error interno: Datos de corte corruptos');
                 return;
             }
