@@ -15,7 +15,8 @@
 
 .admin-layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     background-color: var(--admin-bg-main);
 }
 
