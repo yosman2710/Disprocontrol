@@ -227,7 +227,7 @@ export default function PesoCalientePage() {
                                             <span className="res-label">Reses</span>
                                         </div>
                                         <span style={{ background: '#edf2f7', padding: '2px 8px', borderRadius: '10px' }}>
-                                            {o.reses_procesadas > 0 ? 'En proceso' : 'Pendiente'}
+                                            {o.reses_pendientes_congelador > 0 ? 'Pendiente Enviar Frío' : (o.reses_procesadas > 0 ? 'En proceso' : 'Pendiente')}
                                         </span>
                                     </div>
                                 </div>

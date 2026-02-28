@@ -197,38 +197,45 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                         <span className="count-pill">{ticket.reses.filter(r => r.peso !== null).length} / {ticket.reses.length}</span>
                     </div>
                     <div className="inventory-list">
-                        {ticket.reses.map((res, idx) => (
-                            <div key={res.id} className={`inventory-item ${idx === currentResIndex ? 'is-current' : ''}`}>
-                                <div className="res-id-box">#{res.numero}</div>
-                                <div className="res-data">
-                                    <h4>Res #{res.numero}</h4>
-                                    <p>{res.peso !== null ? `${res.peso} kg registrados (${isHot ? 'Caliente' : 'Frío'})` : 'Pendiente de pesaje'}</p>
+                        {ticket.reses
+                            .filter(res => {
+                                if (isHot) {
+                                    return res.peso === null || res.estado === 'pesado_caliente';
+                                }
+                                return true;
+                            })
+                            .map((res) => (
+                                <div key={res.id} className={`inventory-item ${res.numero - 1 === currentResIndex ? 'is-current' : ''}`}>
+                                    <div className="res-id-box">#{res.numero}</div>
+                                    <div className="res-data">
+                                        <h4>Res #{res.numero}</h4>
+                                        <p>{res.peso !== null ? `${res.peso} kg registrados (${isHot ? 'Caliente' : 'Frío'})` : 'Pendiente de pesaje'}</p>
+                                    </div>
+                                    {res.peso !== null && res.estado !== 'congelador' && isHot && (
+                                        <button
+                                            className="btn-freeze-action"
+                                            title="Enviar al congelador"
+                                            onClick={() => onFreeze(res.id)}
+                                        >
+                                            <Snowflake size={18} />
+                                        </button>
+                                    )}
+                                    {!isHot && !isBoning && res.estado === 'pesado_frio' && (
+                                        <button
+                                            className="btn-freeze-action"
+                                            style={{ background: '#7c3aed', color: '#fff', border: 'none' }}
+                                            title="Enviar a Deshuese"
+                                            onClick={() => onBone(res.id)}
+                                        >
+                                            <Scissors size={18} />
+                                        </button>
+                                    )}
+                                    {res.estado === 'congelador' && <Snowflake size={20} className="status-frozen" />}
+                                    {(res.estado === 'desguazado' || res.estado === 'completado') && <Scissors size={22} className="check-done" style={{ color: '#7c3aed' }} />}
+                                    {res.peso !== null && res.estado !== 'congelador' && res.estado !== 'pesado_frio' && res.estado !== 'desguazado' && <CheckCircle size={20} className="check-done" />}
+                                    {res.estado === 'pesado_frio' && <CheckCircle size={20} className="check-done" style={{ color: '#3182ce' }} />}
                                 </div>
-                                {res.peso !== null && res.estado !== 'congelador' && isHot && (
-                                    <button
-                                        className="btn-freeze-action"
-                                        title="Enviar al congelador"
-                                        onClick={() => onFreeze(res.id)}
-                                    >
-                                        <Snowflake size={18} />
-                                    </button>
-                                )}
-                                {!isHot && res.estado === 'pesado_frio' && (
-                                    <button
-                                        className="btn-freeze-action"
-                                        style={{ background: '#7c3aed', color: '#fff', border: 'none' }}
-                                        title="Marcar para Deshuese"
-                                        onClick={() => onBone(res.id)}
-                                    >
-                                        <Scissors size={18} />
-                                    </button>
-                                )}
-                                {res.estado === 'congelador' && <Snowflake size={20} className="status-frozen" />}
-                                {(res.estado === 'desguazado' || res.estado === 'completado') && <Scissors size={22} className="check-done" style={{ color: '#7c3aed' }} />}
-                                {res.peso !== null && res.estado !== 'congelador' && res.estado !== 'pesado_frio' && res.estado !== 'desguazado' && <CheckCircle size={20} className="check-done" />}
-                                {res.estado === 'pesado_frio' && <CheckCircle size={20} className="check-done" style={{ color: '#3182ce' }} />}
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </div>
             </div>

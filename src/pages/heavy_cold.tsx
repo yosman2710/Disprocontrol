@@ -38,9 +38,9 @@ export default function PesoFrioPage() {
         setLoadingCarcasses(true);
         try {
             const data = await apiFetch(`/reses/by-order/${orderId}`);
-            // Mostramos todas las que llegaron al congelador (congelador, pesado_frio, desguazado, completado)
+            // Solo mostramos las que están en congelador o ya fueron pesadas en frío, pero NO enviadas a deshuese
             const coldCarcasses = data.filter((c: any) =>
-                ['congelador', 'pesado_frio', 'desguazado', 'completado'].includes(c.estado)
+                ['congelador', 'pesado_frio'].includes(c.estado)
             );
             setCarcasses(coldCarcasses);
 
@@ -91,7 +91,7 @@ export default function PesoFrioPage() {
 
             // Refresh carcasses to see progress and check if done
             const data = await apiFetch(`/reses/by-order/${selectedOrder.id}`);
-            const frozenCarcasses = data.filter((c: any) => c.estado === 'congelador' || c.estado === 'desguace' || c.estado === 'pesado_frio');
+            const frozenCarcasses = data.filter((c: any) => c.estado === 'congelador' || c.estado === 'pesado_frio');
             // Nota: El estado cambia a 'congelador' a 'pesado_frio' o similar en el backend? 
             // Según reses.service.js: reses.estado !== 'congelador' error, pero no veo que lo cambie explícitamente a otro estado en addPesoFrio.
             // Ah, espera. addPesoFrio en repo: 

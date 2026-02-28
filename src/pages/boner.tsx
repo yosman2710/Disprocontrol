@@ -57,9 +57,9 @@ export default function BonerPage() {
         setLoadingCarcasses(true);
         try {
             const data = await apiFetch(`/reses/by-order/${orderId}`);
-            // Show carcasses that are ready or in process
+            // Solo mostramos las reses que han sido enviadas a deshuese
             const boningCarcasses = data.filter((c: any) =>
-                ['pesado_frio', 'desguazado', 'completado'].includes(c.estado)
+                ['desguazado'].includes(c.estado)
             );
             setCarcasses(boningCarcasses);
 

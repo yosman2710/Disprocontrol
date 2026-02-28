@@ -64,8 +64,8 @@ export default function Order() {
         try {
             const [ordersData, mataderosData, proveedoresData] = await Promise.all([
                 apiFetch('/orden-compra'),
-                apiFetch('/orden-compra/matadero'),
-                apiFetch('/orden-compra/proveedor')
+                apiFetch('/mataderos'),
+                apiFetch('/proveedores')
             ]);
             setOrders(ordersData);
             setMataderos(mataderosData);
