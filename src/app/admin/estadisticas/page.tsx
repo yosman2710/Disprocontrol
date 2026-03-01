@@ -1,43 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Beef, TrendingDown, Scale, Scissors, TrendingUp } from 'lucide-react';
+import { Beef, TrendingDown, Scale, Scissors, TrendingUp, Loader2 } from 'lucide-react';
 import Head from 'next/head';
+import { apiFetch } from '@/lib/api';
 import '@/styles/Estadisticas.css';
 
-const monthlyData = [
-    { mes: 'Sep', reses: 85 },
-    { mes: 'Oct', reses: 102 },
-    { mes: 'Nov', reses: 93 },
-    { mes: 'Dic', reses: 78 },
-    { mes: 'Ene', reses: 110 },
-    { mes: 'Feb', reses: 94 },
-];
-
-const mermaData = [
-    { mes: 'Sep', merma: 2.1 },
-    { mes: 'Oct', merma: 1.9 },
-    { mes: 'Nov', merma: 2.3 },
-    { mes: 'Dic', merma: 2.0 },
-    { mes: 'Ene', merma: 1.8 },
-    { mes: 'Feb', merma: 2.1 },
-];
-
-const cortesData = [
-    { nombre: 'Lomito', porcentaje: 8, color: '#4b1515' },
-    { nombre: 'Solomo', porcentaje: 12, color: '#f59e0b' },
-    { nombre: 'Punta Trasera', porcentaje: 10, color: '#3b82f6' },
-    { nombre: 'Muchacho', porcentaje: 15, color: '#10b981' },
-    { nombre: 'Costilla', porcentaje: 18, color: '#ef4444' },
-    { nombre: 'Otros', porcentaje: 37, color: '#a8a29e' },
-];
-
-const proveedorData = [
-    { nombre: 'La Esperanza', kg: 9720 },
-    { nombre: 'El Progreso', kg: 7500 },
-    { nombre: 'Los Andes', kg: 5460 },
-    { nombre: 'San Miguel', kg: 2800 },
-];
+// Hardcoded mock data removed, will be fetched from API
 
 interface StatCardProps {
     title: string;
@@ -104,7 +73,7 @@ function VerticalBarChart({ data, dataKey }: { data: any[], dataKey: string }) {
                     return (
                         <g key={i}>
                             <rect
-                                x={x} y={y} width={barWidth} height={barHeight}
+                                x={x} y={y} width={barWidth} height={Math.max(barHeight, 0)}
                                 fill="#7c2d12" rx="2" className="chartBar"
                             />
                             <text x={x + barWidth / 2} y={CHART_HEIGHT - 10} textAnchor="middle" className="axisText">{d.mes}</text>
@@ -169,6 +138,8 @@ function PieChart({ data }: { data: any[] }) {
         return [x, y];
     };
 
+    if (data.length === 0) return <div className="pieLayout"><p style={{ color: '#64748b' }}>No hay datos suficientes</p></div>;
+
     return (
         <div className="pieLayout">
             <svg viewBox="-1 -1 2 2" style={{ width: '160px', height: '160px', transform: 'rotate(-90deg)' }}>
@@ -232,6 +203,38 @@ function HorizontalBarChart({ data, dataKey }: { data: any[], dataKey: string })
 }
 
 export default function Estadisticas() {
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const result = await apiFetch('/estadisticas');
+                setData(result);
+            } catch (error) {
+                console.error("Error fetching estadisticas:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+                <Loader2 size={48} className="animate-spin" style={{ color: '#7c2d12' }} />
+                <span style={{ marginLeft: 16, fontSize: '1.2rem', color: '#64748b' }}>Cargando estadísticas reales...</span>
+            </div>
+        );
+    }
+
+    if (!data) {
+        return <div className="container" style={{ color: '#dc2626', textAlign: 'center', marginTop: '2rem' }}>Error al cargar las estadísticas. Revisa que el servidor backend esté corriendo.</div>;
+    }
+
+    const { kpis, charts } = data;
+
     return (
         <div className="container">
             <div className="header">
@@ -242,31 +245,28 @@ export default function Estadisticas() {
             <div className="statsGrid">
                 <StatCard
                     title="Reses Procesadas"
-                    value="562"
+                    value={kpis.resesProcesadas.toString()}
                     icon={Beef}
-                    trend={{ value: '8.2%', isPositive: true }}
                     accentColor="#7c2d12"
                     bgTint="#fff7ed"
                 />
                 <StatCard
-                    title="Peso Total"
-                    value="151.7t"
-                    subtitle="Último semestre"
+                    title="Peso Total (Caliente)"
+                    value={kpis.pesoTotal > 1000 ? `${(kpis.pesoTotal).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg` : `${kpis.pesoTotal.toFixed(1)} kg`}
                     icon={Scale}
                     accentColor="#4b1515"
                     bgTint="#fef2f2"
                 />
                 <StatCard
                     title="Merma Promedio"
-                    value="2.03%"
+                    value={`${kpis.mermaPromedio.toFixed(2)}%`}
                     icon={TrendingDown}
-                    trend={{ value: '0.3%', isPositive: true }}
                     accentColor="#ca8a04"
                     bgTint="#fefce8"
                 />
                 <StatCard
                     title="Cortes Registrados"
-                    value="3,240"
+                    value={kpis.cortesRegistrados.toString()}
                     icon={Scissors}
                     accentColor="#d97706"
                     bgTint="#fffbeb"
@@ -276,22 +276,22 @@ export default function Estadisticas() {
             <div className="chartsRow">
                 <div className="chartCard">
                     <h3 className="chartTitle">Reses Recibidas por Mes</h3>
-                    <VerticalBarChart data={monthlyData} dataKey="reses" />
+                    {charts.monthlyData.length > 0 ? <VerticalBarChart data={charts.monthlyData} dataKey="reses" /> : <p className="text-gray-400">Sin datos registrados</p>}
                 </div>
                 <div className="chartCard">
                     <h3 className="chartTitle">Tendencia de Merma (%)</h3>
-                    <LineChart data={mermaData} dataKey="merma" />
+                    {charts.mermaData.length > 0 ? <LineChart data={charts.mermaData} dataKey="merma" /> : <p className="text-gray-400">Sin datos registrados</p>}
                 </div>
             </div>
 
             <div className="chartsRow">
                 <div className="chartCard">
                     <h3 className="chartTitle">Distribución de Cortes</h3>
-                    <PieChart data={cortesData} />
+                    {charts.cortesData.length > 0 ? <PieChart data={charts.cortesData} /> : <p className="text-gray-400">Sin datos registrados</p>}
                 </div>
                 <div className="chartCard">
                     <h3 className="chartTitle">Kg por Proveedor</h3>
-                    <HorizontalBarChart data={proveedorData} dataKey="kg" />
+                    {charts.proveedorData.length > 0 ? <HorizontalBarChart data={charts.proveedorData} dataKey="kg" /> : <p className="text-gray-400">Sin datos registrados</p>}
                 </div>
             </div>
         </div>
