@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Search, Plus, Building2, Phone, Mail, MapPin, FileText, X, Loader2, AlertCircle, ChevronDown, ChevronUp, Hash, Weight, TrendingDown, Factory } from 'lucide-react';
 import Head from 'next/head';
 import { apiFetch } from '@/lib/api';
-import '@/styles/Proveedores.css';
+import styles from '@/styles/Proveedores.module.css';
 
 interface Proveedor {
     id: string;
@@ -150,27 +150,27 @@ function Proveedores() {
             <Head>
                 <title>Proveedores - Carnes del Zulia</title>
             </Head>
-            <div className={"container"}>
+            <div className={styles.container}>
                 {/* Header */}
-                <header className={"header"}>
+                <header className={styles.header}>
                     <div>
-                        <h1 className={"title"}>Proveedores</h1>
-                        <p className={"subtitle"}>Gestión y movimientos de proveedores</p>
+                        <h1 className={styles.title}>Proveedores</h1>
+                        <p className={styles.subtitle}>Gestión y movimientos de proveedores</p>
                     </div>
-                    <button onClick={() => setShowForm(true)} className={"newButton"}>
+                    <button onClick={() => setShowForm(true)} className={styles.newButton}>
                         <Plus size={20} />
                         <span>Nuevo Proveedor</span>
                     </button>
                 </header>
 
                 {/* Search */}
-                <div className={"searchContainer"}>
-                    <Search size={20} className={"searchIcon"} />
+                <div className={styles.searchContainer}>
+                    <Search size={20} className={styles.searchIcon} />
                     <input
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         placeholder="Buscar por nombre o RIF..."
-                        className={"searchInput"}
+                        className={styles.searchInput}
                     />
                 </div>
 
@@ -188,7 +188,7 @@ function Proveedores() {
                         <Loader2 className="animate-spin" size={40} />
                     </div>
                 ) : (
-                    <div className={"grid"}>
+                    <div className={styles.grid}>
                         {filtered.length === 0 ? (
                             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#666' }}>
                                 No se encontraron proveedores.
@@ -198,33 +198,33 @@ function Proveedores() {
                                 <button
                                     key={prov.id}
                                     onClick={() => handleSelectProveedor(prov)}
-                                    className={"providerCard"}
+                                    className={styles.providerCard}
                                     aria-label={`Ver detalles de ${prov.nombre}`}
                                 >
-                                    <div className={"cardHeader"}>
-                                        <div className={"cardIcon"}>
+                                    <div className={styles.cardHeader}>
+                                        <div className={styles.cardIcon}>
                                             <Building2 size={24} />
                                         </div>
-                                        <div className={"cardInfo"}>
-                                            <h3 className={"cardTitle"}>{prov.nombre}</h3>
-                                            <p className={"cardRif"}>{prov.rif}</p>
+                                        <div className={styles.cardInfo}>
+                                            <h3 className={styles.cardTitle}>{prov.nombre}</h3>
+                                            <p className={styles.cardRif}>{prov.rif}</p>
                                         </div>
                                     </div>
                                     {(() => {
                                         const r = resumen[String(prov.id)];
                                         return (
-                                            <div className={"statsGrid"}>
-                                                <div className={"statItem"}>
-                                                    <span className={"statValue"}>{r ? r.total_ordenes : '0'}</span>
-                                                    <span className={"statLabel"}>Ordenes</span>
+                                            <div className={styles.statsGrid}>
+                                                <div className={styles.statItem}>
+                                                    <span className={styles.statValue}>{r ? r.total_ordenes : '0'}</span>
+                                                    <span className={styles.statLabel}>Ordenes</span>
                                                 </div>
-                                                <div className={"statItem"}>
-                                                    <span className={"statValue"}>{r ? r.total_reses : '0'}</span>
-                                                    <span className={"statLabel"}>Reses</span>
+                                                <div className={styles.statItem}>
+                                                    <span className={styles.statValue}>{r ? r.total_reses : '0'}</span>
+                                                    <span className={styles.statLabel}>Reses</span>
                                                 </div>
-                                                <div className={"statItem"}>
-                                                    <span className={"statValue"}>{r ? Number(r.total_kg_caliente).toLocaleString('es-VE', { maximumFractionDigits: 0 }) : '0'}</span>
-                                                    <span className={"statLabel"}>Kg Cal.</span>
+                                                <div className={styles.statItem}>
+                                                    <span className={styles.statValue}>{r ? Number(r.total_kg_caliente).toLocaleString('es-VE', { maximumFractionDigits: 0 }) : '0'}</span>
+                                                    <span className={styles.statLabel}>Kg Cal.</span>
                                                 </div>
                                             </div>
                                         );
@@ -237,38 +237,38 @@ function Proveedores() {
 
                 {/* Detail Modal */}
                 {selected && (
-                    <div className={"modalOverlay"} onClick={() => setSelected(null)}>
-                        <div className={"modalContent"} onClick={e => e.stopPropagation()} style={{ maxWidth: '780px', width: '95vw' }}>
-                            <div className={"modalHeader"}>
-                                <button className={"closeButton"} onClick={() => setSelected(null)}>
+                    <div className={styles.modalOverlay} onClick={() => setSelected(null)}>
+                        <div className={styles.modalContent} onClick={e => e.stopPropagation()} style={{ maxWidth: '780px', width: '95vw' }}>
+                            <div className={styles.modalHeader}>
+                                <button className={styles.closeButton} onClick={() => setSelected(null)}>
                                     <X size={24} />
                                 </button>
-                                <div className={"modalIcon"}>
+                                <div className={styles.modalIcon}>
                                     <Building2 size={40} />
                                 </div>
-                                <h2 className={"modalTitle"}>{selected.nombre}</h2>
+                                <h2 className={styles.modalTitle}>{selected.nombre}</h2>
                             </div>
 
                             {/* Info */}
-                            <div className={"infoGrid"}>
-                                <div className={"infoItem"}>
+                            <div className={styles.infoGrid}>
+                                <div className={styles.infoItem}>
                                     <FileText size={16} />
                                     <span>{selected.rif}</span>
                                 </div>
                                 {selected.telefono && (
-                                    <div className={"infoItem"}>
+                                    <div className={styles.infoItem}>
                                         <Phone size={16} />
                                         <span>{selected.telefono}</span>
                                     </div>
                                 )}
                                 {selected.email && (
-                                    <div className={"infoItem"}>
+                                    <div className={styles.infoItem}>
                                         <Mail size={16} />
                                         <span>{selected.email}</span>
                                     </div>
                                 )}
                                 {selected.direccion && (
-                                    <div className={"infoItem"}>
+                                    <div className={styles.infoItem}>
                                         <MapPin size={16} />
                                         <span>{selected.direccion}</span>
                                     </div>
@@ -281,24 +281,24 @@ function Proveedores() {
                                     <Loader2 className="animate-spin" size={28} />
                                 </div>
                             ) : (
-                                <div className={"totalsGrid"}>
+                                <div className={styles.totalsGrid}>
                                     {[
                                         { label: 'Ordenes', value: totals.totalOrdenes },
                                         { label: 'Reses', value: totals.totalReses },
                                         { label: 'Kg Caliente', value: totals.totalKgCaliente.toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) },
                                         { label: 'Merma Prom.', value: `${totals.mermaPromedio.toFixed(1)}%` },
                                     ].map((stat, i) => (
-                                        <div key={i} className={"totalItem"}>
-                                            <span className={"totalValue"}>{stat.value}</span>
-                                            <span className={"totalLabel"}>{stat.label}</span>
+                                        <div key={i} className={styles.totalItem}>
+                                            <span className={styles.totalValue}>{stat.value}</span>
+                                            <span className={styles.totalLabel}>{stat.label}</span>
                                         </div>
                                     ))}
                                 </div>
                             )}
 
                             {/* Lista de órdenes */}
-                            <div className={"movimientosSection"}>
-                                <h4 className={"sectionTitle"}>Órdenes de Compra</h4>
+                            <div className={styles.movimientosSection}>
+                                <h4 className={styles.sectionTitle}>Órdenes de Compra</h4>
 
                                 {errorOrdenes && (
                                     <div style={{ color: '#ef4444', padding: '10px', textAlign: 'center', fontSize: '14px' }}>
@@ -311,7 +311,7 @@ function Proveedores() {
                                 )}
 
                                 {!loadingOrdenes && ordenes.length > 0 && (
-                                    <div className={"movimientosList"}>
+                                    <div className={styles.movimientosList}>
                                         {/* Header de la tabla */}
                                         <div style={{
                                             display: 'grid',
@@ -390,23 +390,23 @@ function Proveedores() {
 
                 {/* Create Modal */}
                 {showForm && (
-                    <div className={"modalOverlay"} onClick={() => setShowForm(false)}>
-                        <div className={"formModal"} onClick={e => e.stopPropagation()}>
+                    <div className={styles.modalOverlay} onClick={() => setShowForm(false)}>
+                        <div className={styles.formModal} onClick={e => e.stopPropagation()}>
                             {/* Encabezado con gradiente */}
-                            <div className={"formModalHeader"}>
-                                <button className={"formModalCloseBtn"} onClick={() => setShowForm(false)}>
+                            <div className={styles.formModalHeader}>
+                                <button className={styles.formModalCloseBtn} onClick={() => setShowForm(false)}>
                                     <X size={18} />
                                 </button>
-                                <div className={"formModalIcon"}>
+                                <div className={styles.formModalIcon}>
                                     <Building2 size={30} />
                                 </div>
-                                <h2 className={"formModalTitle"}>Nuevo Proveedor</h2>
-                                <p className={"formModalSubtitle"}>Completa los datos para registrarlo</p>
+                                <h2 className={styles.formModalTitle}>Nuevo Proveedor</h2>
+                                <p className={styles.formModalSubtitle}>Completa los datos para registrarlo</p>
                             </div>
 
                             {/* Cuerpo del formulario */}
-                            <div className={"formModalBody"}>
-                                <div className={"formFields"}>
+                            <div className={styles.formModalBody}>
+                                <div className={styles.formFields}>
                                     {[
                                         { key: 'nombre', label: 'Nombre *', placeholder: 'Ej. Frigoríficos del Norte S.A.' },
                                         { key: 'rif', label: 'RIF *', placeholder: 'Ej. J-12345678-9' },
@@ -414,13 +414,13 @@ function Proveedores() {
                                         { key: 'telefono', label: 'Teléfono', placeholder: 'Ej. 0424-1234567' },
                                         { key: 'email', label: 'Email', placeholder: 'Ej. contacto@empresa.com' },
                                     ].map(field => (
-                                        <div key={field.key} className={"formField"}>
-                                            <label className={"formLabel"}>{field.label}</label>
+                                        <div key={field.key} className={styles.formField}>
+                                            <label className={styles.formLabel}>{field.label}</label>
                                             <input
                                                 value={form[field.key as keyof typeof form]}
                                                 onChange={e => setForm(prev => ({ ...prev, [field.key]: e.target.value }))}
                                                 placeholder={field.placeholder}
-                                                className={"formInput"}
+                                                className={styles.formInput}
                                                 disabled={isSubmitting}
                                             />
                                         </div>
@@ -428,7 +428,7 @@ function Proveedores() {
                                 </div>
                                 <button
                                     onClick={handleCreate}
-                                    className={"createButton"}
+                                    className={styles.createButton}
                                     disabled={!form.nombre || !form.rif || isSubmitting}
                                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
                                 >

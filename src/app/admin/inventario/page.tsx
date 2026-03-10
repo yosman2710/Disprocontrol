@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { apiFetch } from '@/lib/api';
 import { Box, Search, PackageOpen, Loader2, Beef } from 'lucide-react';
 import Head from 'next/head';
-import '@/styles/Inventario.css';
+import styles from '@/styles/Inventario.module.css';
 
 interface InventarioItem {
     id: number;
@@ -55,24 +55,24 @@ export default function InventarioPage() {
     });
 
     return (
-        <div className="inventario-container">
+        <div className={`${styles.container} ${styles.inventarioContainer}`}>
             <Head>
                 <title>Inventario | Disprocontrol</title>
             </Head>
 
-            <div className="inventario-header-card">
-                <div className="inventario-header-titles">
+            <div className={styles['inventario-header-card']}>
+                <div className={styles['inventario-header-titles']}>
                     <h1>Inventario Central</h1>
                     <p>Consulta y filtrado de cortes almacenados</p>
                 </div>
 
-                <div className="inventario-controls">
-                    <div className="search-box">
-                        <Search size={18} className="search-icon" />
+                <div className={styles['inventario-controls']}>
+                    <div className={styles['search-box']}>
+                        <Search size={18} className={styles['search-icon']} />
                         <input
                             type="text"
                             placeholder="Buscar por código, corte o ubicación..."
-                            className="search-input"
+                            className={styles['search-input']}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -80,20 +80,20 @@ export default function InventarioPage() {
                 </div>
             </div>
 
-            <div className="inventario-table-wrapper">
+            <div className={styles['inventario-table-wrapper']}>
                 {loading ? (
-                    <div className="inventario-loader">
+                    <div className={styles['inventario-loader']}>
                         <Loader2 size={40} className="animate-spin mb-4" style={{ color: '#3b82f6' }} />
                         <span>Cargando existencias del inventario...</span>
                     </div>
                 ) : inventario.length === 0 ? (
-                    <div className="inventario-empty">
-                        <PackageOpen className="empty-icon" />
+                    <div className={styles['inventario-empty']}>
+                        <PackageOpen className={styles['empty-icon']} />
                         <h2>No hay inventario registrado</h2>
                         <p>No se encontraron cortes en la base de datos de existencias.</p>
                     </div>
                 ) : (
-                    <table className="inventario-table">
+                    <table className={styles['inventario-table']}>
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -108,24 +108,24 @@ export default function InventarioPage() {
                             {filteredInventario.length > 0 ? (
                                 filteredInventario.map(item => (
                                     <tr key={item.id}>
-                                        <td className="codigo-cell">{item.codigo}</td>
-                                        <td className="corte-cell">
-                                            <div className="corte-icon">
+                                        <td className={styles['codigo-cell']}>{item.codigo}</td>
+                                        <td className={styles['corte-cell']}>
+                                            <div className={styles['corte-icon']}>
                                                 <Beef size={20} />
                                             </div>
                                             {item.tipo_corte}
                                         </td>
                                         <td>{item.cantidad} ub(s)</td>
-                                        <td className="peso-cell">
+                                        <td className={styles['peso-cell']}>
                                             {Number(item.peso_total).toFixed(2)} kg
                                         </td>
                                         <td>
-                                            <span className="ubicacion-badge">
+                                            <span className={styles['ubicacion-badge']}>
                                                 {item.ubicacion || 'ALMACÉN'}
                                                 {/* Fallback to 'ALMACÉN' si ubicacion is null */}
                                             </span>
                                         </td>
-                                        <td className="fecha-cell">
+                                        <td className={styles['fecha-cell']}>
                                             {new Date(item.fecha_ingreso).toLocaleString('es-VE', {
                                                 dateStyle: 'medium',
                                                 timeStyle: 'short'

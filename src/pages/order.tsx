@@ -203,7 +203,7 @@ export default function Order() {
                     </div>
                 )}
 
-                {/* MODAL: NUEVO TICKET */}
+                {/* MODAL: NUEVA ORDEN */}
                 {modalNuevo && (
                     <div className="overlay">
                         <div className="modal">
@@ -337,7 +337,7 @@ export default function Order() {
                     </div>
                 )}
 
-                {/* MODAL: DETALLE TICKET */}
+                {/* MODAL: DETALLE ORDEN */}
                 {ticketDetalle && (
                     <div className="overlay">
                         <div className="modal" style={{ maxWidth: '950px', padding: '0', display: 'flex', flexDirection: 'column' }}>
