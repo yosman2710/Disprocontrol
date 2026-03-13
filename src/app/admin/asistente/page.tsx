@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
 import Head from 'next/head';
 import { apiFetch } from '@/lib/api';
+import ReactMarkdown from 'react-markdown';
 import '@/styles/Chatbot.css';
 
 interface Message {
@@ -66,10 +67,11 @@ export default function Chatbot() {
             setMessages(prev => [...prev, reply]);
         } catch (error: any) {
             console.error("Chat Error:", error);
+            const errorMessage = error.message || "Error desconocido en la conexión.";
             const errorReply: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: "Hubo un problema al conectar con mi cerebro de IA. Por favor, intenta de nuevo más tarde.",
+                content: `❌ Hubo un problema: **${errorMessage}**. \n\nPor favor, verifica que el backend esté corriendo y la ApiKey sea válida.`,
                 timestamp: new Date(),
             };
             setMessages(prev => [...prev, errorReply]);
@@ -85,13 +87,6 @@ export default function Chatbot() {
         'Dame una recomendación operativa'
     ];
 
-    const renderMessageContent = (content: string) => {
-        // Simple markdown-to-tsx bolding
-        return content.split('**').map((part, i) =>
-            i % 2 === 1 ? <strong key={i}>{part}</strong> : <span key={i}>{part}</span>
-        );
-    };
-
     return (
         <>
             <Head>
@@ -104,7 +99,7 @@ export default function Chatbot() {
                     </div>
                     <div className="headerContent">
                         <h1 className="headerTitle">Asistente IA Real-Time</h1>
-                        <p className="headerSubtitle">Conectado a tu base de datos y Gemini 1.5</p>
+                        <p className="headerSubtitle">Conectado a tu base de datos y Gemini 3.0 Flash</p>
                     </div>
                     <div className="headerStatus">
                         <span className="statusIndicator" />
@@ -121,7 +116,7 @@ export default function Chatbot() {
                                 </div>
                             )}
                             <div className={msg.role === 'user' ? "userMessage" : "assistantMessage"}>
-                                {renderMessageContent(msg.content)}
+                                <ReactMarkdown>{msg.content}</ReactMarkdown>
                             </div>
                             {msg.role === 'user' && (
                                 <div className="userAvatar">

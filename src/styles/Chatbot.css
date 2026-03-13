@@ -29,8 +29,9 @@ body {
 .chatContainer {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    max-width: 800px;
+    height: 80%;
+    min-height: calc(100vh - 2rem);
+    width: 80%;
     margin: 0 auto;
     background: var(--card);
     box-shadow: var(--shadow-md);
@@ -352,4 +353,49 @@ body {
     .suggestions {
         padding: 0.75rem;
     }
+}
+
+/* Markdown Content Styles */
+.userMessage p,
+.assistantMessage p {
+    margin: 0 0 0.75rem 0;
+}
+
+.userMessage p:last-child,
+.assistantMessage p:last-child {
+    margin-bottom: 0;
+}
+
+.userMessage ul,
+.assistantMessage ul,
+.userMessage ol,
+.assistantMessage ol {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+}
+
+.userMessage li,
+.assistantMessage li {
+    margin-bottom: 0.25rem;
+}
+
+.userMessage h1,
+.assistantMessage h1,
+.userMessage h2,
+.assistantMessage h2,
+.userMessage h3,
+.assistantMessage h3,
+.userMessage h4,
+.assistantMessage h4 {
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.userMessage h1:first-child,
+.assistantMessage h1:first-child,
+.userMessage h2:first-child,
+.assistantMessage h2:first-child,
+.userMessage h3:first-child,
+.assistantMessage h3:first-child {
+    margin-top: 0;
 }

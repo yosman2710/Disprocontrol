@@ -22,7 +22,11 @@ export async function apiFetch(endpoint: string, options: any = {}) {
             handleLogout();
         }
 
-        throw new Error(errorData.message || errorData.error || 'Error en la petición');
+        const exactMessage = errorData.details 
+            ? `${errorData.error} (${errorData.details})` 
+            : (errorData.message || errorData.error || 'Error en la petición');
+
+        throw new Error(exactMessage);
     }
 
     return response.json();
