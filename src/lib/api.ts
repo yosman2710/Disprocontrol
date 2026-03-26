@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-disprocar.onrender.com';
 
 export async function apiFetch(endpoint: string, options: any = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('dispro_token') : null;
@@ -22,8 +22,8 @@ export async function apiFetch(endpoint: string, options: any = {}) {
             handleLogout();
         }
 
-        const exactMessage = errorData.details 
-            ? `${errorData.error} (${errorData.details})` 
+        const exactMessage = errorData.details
+            ? `${errorData.error} (${errorData.details})`
             : (errorData.message || errorData.error || 'Error en la petición');
 
         throw new Error(exactMessage);

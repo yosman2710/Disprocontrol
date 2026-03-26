@@ -18,7 +18,7 @@ const INITIAL_MESSAGES: Message[] = [
     {
         id: '1',
         role: 'assistant' as const,
-        content: '¡Hola! 👋 Soy el asistente inteligente de **Carnes del Zulia**. Tengo acceso en tiempo real a la base de datos para ayudarte con información sobre órdenes de compra, reses, proveedores y mermas. ¿En qué puedo ayudarte hoy?',
+        content: '¡Hola! 👋 Soy el asistente inteligente de **Disprocar**. Tengo acceso en tiempo real a la base de datos para ayudarte con información sobre órdenes de compra, reses, proveedores y mermas. ¿En qué puedo ayudarte hoy?',
         timestamp: new Date(),
     },
 ];
