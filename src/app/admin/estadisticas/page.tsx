@@ -79,7 +79,7 @@ function VerticalBarChart({ data, dataKey }: { data: any[], dataKey: string }) {
                         <g key={i}>
                             <rect
                                 x={x} y={y} width={barWidth} height={Math.max(barHeight, 0)}
-                                fill="#7c2d12" rx="2" className={styles.chartBar}
+                                fill="#641B2E" rx="4" className={styles.chartBar}
                             />
                             <text x={x + barWidth / 2} y={CHART_HEIGHT - 10} textAnchor="middle" className={styles.axisText}>{d.mes}</text>
                         </g>
@@ -126,7 +126,7 @@ function LineChart({ data, dataKey }: { data: any[], dataKey: string }) {
                     );
                 })}
 
-                {points && <polyline points={points} fill="none" stroke="#d97706" strokeWidth="2" strokeLinejoin="round" />}
+                {points && <polyline points={points} fill="none" stroke="#9d174d" strokeWidth="3" strokeLinejoin="round" />}
                 {data.map((d, i) => {
                     const val = Number(d[dataKey]) || 0;
                     const x = data.length > 1 ? PADDING.left + i * stepX : PADDING.left + innerWidth / 2;
@@ -136,7 +136,7 @@ function LineChart({ data, dataKey }: { data: any[], dataKey: string }) {
 
                     return (
                         <g key={i}>
-                            <circle cx={x} cy={y} r="4" fill="#d97706" stroke="white" strokeWidth="2" />
+                            <circle cx={x} cy={y} r="5" fill="#9d174d" stroke="white" strokeWidth="2" />
                             <text x={x} y={CHART_HEIGHT - 10} textAnchor="middle" className={styles.axisText}>{d.mes}</text>
                         </g>
                     );
@@ -216,7 +216,7 @@ function HorizontalBarChart({ data, dataKey }: { data: any[], dataKey: string })
                     return (
                         <g key={i}>
                             <text x={LEFT_MARGIN - 10} y={y + barHeight / 2 + 4} textAnchor="end" className={styles.axisText}>{d.nombre}</text>
-                            <rect x={LEFT_MARGIN} y={y} width={Math.max(barWidth, 0)} height={barHeight} fill="#2563eb" rx="2" />
+                            <rect x={LEFT_MARGIN} y={y} width={Math.max(barWidth, 0)} height={barHeight} fill="#f59e0b" rx="4" className={styles.chartBar} />
                         </g>
                     );
                 })}
@@ -247,14 +247,14 @@ export default function Estadisticas() {
     if (loading) {
         return (
             <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-                <Loader2 size={48} className="animate-spin" style={{ color: '#7c2d12' }} />
-                <span style={{ marginLeft: 16, fontSize: '1.2rem', color: '#64748b' }}>Cargando estadísticas reales...</span>
+                <Loader2 size={48} className="animate-spin" style={{ color: '#641B2E' }} />
+                <span style={{ marginLeft: 16, fontSize: '1.2rem', color: '#64748b', fontWeight: 600 }}>Cargando analíticas...</span>
             </div>
         );
     }
 
     if (!data) {
-        return <div className={styles.container} style={{ color: '#dc2626', textAlign: 'center', marginTop: '2rem' }}>Error al cargar las estadísticas. Revisa que el servidor backend esté corriendo.</div>;
+        return <div className={styles.container} style={{ color: '#dc2626', textAlign: 'center', marginTop: '2rem' }}>Error al cargar las estadísticas. Revisa la conexión al servidor.</div>;
     }
 
     const { kpis, charts } = data;
@@ -263,59 +263,80 @@ export default function Estadisticas() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Estadísticas</h1>
-                <p className={styles.subtitle}>Resumen general de operaciones</p>
+                <p className={styles.subtitle}>Análisis detallado de producción y rendimiento</p>
             </div>
 
             <div className={styles.statsGrid}>
-                <StatCard
-                    title="Reses Procesadas"
-                    value={kpis.resesProcesadas.toString()}
-                    icon={Beef}
-                    accentColor="#7c2d12"
-                    bgTint="#fff7ed"
-                />
-                <StatCard
-                    title="Peso Total (Caliente)"
-                    value={kpis.pesoTotal > 1000 ? `${(kpis.pesoTotal).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg` : `${kpis.pesoTotal.toFixed(1)} kg`}
-                    icon={Scale}
-                    accentColor="#4b1515"
-                    bgTint="#fef2f2"
-                />
-                <StatCard
-                    title="Merma Promedio"
-                    value={`${kpis.mermaPromedio.toFixed(2)}%`}
-                    icon={TrendingDown}
-                    accentColor="#ca8a04"
-                    bgTint="#fefce8"
-                />
-                <StatCard
-                    title="Cortes Registrados"
-                    value={kpis.cortesRegistrados.toString()}
-                    icon={Scissors}
-                    accentColor="#d97706"
-                    bgTint="#fffbeb"
-                />
+                <div style={{ animationDelay: '0.1s' }} className={styles.statCardWrapper}>
+                    <StatCard
+                        title="Reses Procesadas"
+                        value={kpis.resesProcesadas.toString()}
+                        icon={Beef}
+                        accentColor="#641B2E"
+                        bgTint="#fff5f7"
+                    />
+                </div>
+                <div style={{ animationDelay: '0.2s' }} className={styles.statCardWrapper}>
+                    <StatCard
+                        title="Peso Total"
+                        value={kpis.pesoTotal > 1000 ? `${(kpis.pesoTotal / 1000).toFixed(1)}t` : `${kpis.pesoTotal.toFixed(0)}kg`}
+                        subtitle="Producción total acumulada"
+                        icon={Scale}
+                        accentColor="#9d174d"
+                        bgTint="#fdf2f8"
+                    />
+                </div>
+                <div style={{ animationDelay: '0.3s' }} className={styles.statCardWrapper}>
+                    <StatCard
+                        title="Merma Promedio"
+                        value={`${kpis.mermaPromedio.toFixed(2)}%`}
+                        icon={TrendingDown}
+                        accentColor="#f59e0b"
+                        bgTint="#fffbeb"
+                        trend={{ value: '0.2%', isPositive: false }}
+                    />
+                </div>
+                <div style={{ animationDelay: '0.4s' }} className={styles.statCardWrapper}>
+                    <StatCard
+                        title="Tipos de Corte"
+                        value={kpis.cortesRegistrados.toString()}
+                        icon={Scissors}
+                        accentColor="#10b981"
+                        bgTint="#f0fdf4"
+                    />
+                </div>
             </div>
 
             <div className={styles.chartsRow}>
-                <div className={styles.chartCard}>
+                <div style={{ animationDelay: '0.5s' }} className={styles.chartCard}>
                     <h3 className={styles.chartTitle}>Reses Recibidas por Mes</h3>
-                    {charts.monthlyData.length > 0 ? <VerticalBarChart data={charts.monthlyData} dataKey="reses" /> : <p className="text-gray-400">Sin datos registrados</p>}
+                    {charts.monthlyData.length > 0 ? (
+                        <VerticalBarChart data={charts.monthlyData} dataKey="reses" />
+                    ) : <p style={{ color: '#94a3b8', textAlign: 'center' }}>Sin datos registrados</p>}
                 </div>
-                <div className={styles.chartCard}>
+                <div style={{ animationDelay: '0.6s' }} className={styles.chartCard}>
                     <h3 className={styles.chartTitle}>Tendencia de Merma (%)</h3>
-                    {charts.mermaData.length > 0 ? <LineChart data={charts.mermaData} dataKey="merma" /> : <p className="text-gray-400">Sin datos registrados</p>}
+                    {charts.mermaData.length > 0 ? (
+                        <LineChart data={charts.mermaData} dataKey="merma" />
+                    ) : <p style={{ color: '#94a3b8', textAlign: 'center' }}>Sin datos registrados</p>}
                 </div>
             </div>
 
             <div className={styles.chartsRow}>
-                <div className={styles.chartCard}>
+                <div style={{ animationDelay: '0.7s' }} className={styles.chartCard}>
                     <h3 className={styles.chartTitle}>Distribución de Cortes</h3>
-                    {charts.cortesData.length > 0 ? <PieChart data={charts.cortesData} /> : <p className="text-gray-400">Sin datos registrados</p>}
+                    {charts.cortesData.length > 0 ? (
+                        <PieChart data={charts.cortesData.map((c: any, i: number) => ({
+                            ...c,
+                            color: ['#641B2E', '#9d174d', '#ca8a04', '#f59e0b', '#10b981', '#3b82f6'][i % 6]
+                        }))} />
+                    ) : <p style={{ color: '#94a3b8', textAlign: 'center' }}>Sin datos registrados</p>}
                 </div>
-                <div className={styles.chartCard}>
+                <div style={{ animationDelay: '0.8s' }} className={styles.chartCard}>
                     <h3 className={styles.chartTitle}>Kg por Proveedor</h3>
-                    {charts.proveedorData.length > 0 ? <HorizontalBarChart data={charts.proveedorData} dataKey="kg" /> : <p className="text-gray-400">Sin datos registrados</p>}
+                    {charts.proveedorData.length > 0 ? (
+                        <HorizontalBarChart data={charts.proveedorData} dataKey="kg" />
+                    ) : <p style={{ color: '#94a3b8', textAlign: 'center' }}>Sin datos registrados</p>}
                 </div>
             </div>
         </div>

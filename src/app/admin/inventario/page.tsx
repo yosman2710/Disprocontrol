@@ -55,7 +55,7 @@ export default function InventarioPage() {
     });
 
     return (
-        <div className={`${styles.container} ${styles.inventarioContainer}`}>
+        <div className={`${styles.container} ${styles.inventarioContainer} animate-up`}>
             <Head>
                 <title>Inventario | Disprocontrol</title>
             </Head>
@@ -80,68 +80,69 @@ export default function InventarioPage() {
                 </div>
             </div>
 
-            <div className={styles['inventario-table-wrapper']}>
+            <div className={styles['inventario-list-wrapper']}>
+                {!loading && filteredInventario.length > 0 && (
+                    <div className={styles['list-headers']}>
+                        <div>Código</div>
+                        <div>Corte Extraído</div>
+                        <div>Cantidad</div>
+                        <div>Peso Total</div>
+                        <div>Ubicación</div>
+                        <div>Fecha Ingreso</div>
+                    </div>
+                )}
+
                 {loading ? (
                     <div className={styles['inventario-loader']}>
-                        <Loader2 size={40} className="animate-spin mb-4" style={{ color: '#3b82f6' }} />
-                        <span>Cargando existencias del inventario...</span>
+                        <Loader2 size={48} className="animate-spin" style={{ color: '#641B2E' }} />
+                        <span>Sincronizando existencias...</span>
                     </div>
-                ) : inventario.length === 0 ? (
+                ) : filteredInventario.length === 0 ? (
                     <div className={styles['inventario-empty']}>
-                        <PackageOpen className={styles['empty-icon']} />
-                        <h2>No hay inventario registrado</h2>
-                        <p>No se encontraron cortes en la base de datos de existencias.</p>
+                        <PackageOpen size={64} className={styles['empty-icon']} />
+                        <h2>No hay coincidencias</h2>
+                        <p>No se encontraron cortes que coincidan con "{searchTerm}"</p>
                     </div>
                 ) : (
-                    <table className={styles['inventario-table']}>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Corte Extraído</th>
-                                <th>Cantidad</th>
-                                <th>Peso Total</th>
-                                <th>Ubicación</th>
-                                <th>Fecha Ingreso</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredInventario.length > 0 ? (
-                                filteredInventario.map(item => (
-                                    <tr key={item.id}>
-                                        <td className={styles['codigo-cell']}>{item.codigo}</td>
-                                        <td className={styles['corte-cell']}>
-                                            <div className={styles['corte-icon']}>
-                                                <Beef size={20} />
-                                            </div>
-                                            {item.tipo_corte}
-                                        </td>
-                                        <td>{item.cantidad} ub(s)</td>
-                                        <td className={styles['peso-cell']}>
-                                            {Number(item.peso_total).toFixed(2)} kg
-                                        </td>
-                                        <td>
-                                            <span className={styles['ubicacion-badge']}>
-                                                {item.ubicacion || 'ALMACÉN'}
-                                                {/* Fallback to 'ALMACÉN' si ubicacion is null */}
-                                            </span>
-                                        </td>
-                                        <td className={styles['fecha-cell']}>
-                                            {new Date(item.fecha_ingreso).toLocaleString('es-VE', {
-                                                dateStyle: 'medium',
-                                                timeStyle: 'short'
-                                            })}
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
-                                        No se encontraron resultados para la búsqueda "{searchTerm}"
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    <div className={styles['inventario-list']}>
+                        {filteredInventario.map((item, index) => (
+                            <div 
+                                key={item.id} 
+                                className={styles['item-row']}
+                                style={{ animationDelay: `${index * 0.05}s` }}
+                            >
+                                <div className={styles['codigo-cell']}>
+                                    <span className={styles['column-label']}>Código:</span>
+                                    {item.codigo}
+                                </div>
+                                <div className={styles['corte-cell']}>
+                                    <div className={styles['corte-icon']}>
+                                        <Beef size={22} />
+                                    </div>
+                                    {item.tipo_corte}
+                                </div>
+                                <div className={styles['cantidad-text']}>
+                                    <span className={styles['column-label']}>Cantidad:</span>
+                                    {item.cantidad} ub(s)
+                                </div>
+                                <div className={styles['peso-value']}>
+                                    <span className={styles['column-label']}>Peso:</span>
+                                    {Number(item.peso_total).toFixed(2)} <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>kg</span>
+                                </div>
+                                <div>
+                                    <span className={styles['ubicacion-badge']}>
+                                        {item.ubicacion || 'ALMACÉN'}
+                                    </span>
+                                </div>
+                                <div className={styles['fecha-text']}>
+                                    {new Date(item.fecha_ingreso).toLocaleString('es-VE', {
+                                        dateStyle: 'medium',
+                                        timeStyle: 'short'
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
         </div>
