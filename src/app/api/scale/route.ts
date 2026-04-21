@@ -8,9 +8,12 @@ export async function GET() {
   try {
     const state = getScaleState();
     return NextResponse.json(state);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Error leyendo balanza';
+
     return NextResponse.json(
-      { error: error.message || 'Error leyendo balanza' },
+      { error: message },
       { status: 500 }
     );
   }
@@ -35,9 +38,12 @@ export async function POST(req: Request) {
       { error: 'Acción no válida' },
       { status: 400 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Error en la balanza';
+
     return NextResponse.json(
-      { error: error.message || 'Error en la balanza' },
+      { error: message },
       { status: 500 }
     );
   }

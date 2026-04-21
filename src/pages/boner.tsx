@@ -330,7 +330,7 @@ export default function BonerPage() {
                                         icon={<Package size={24} />}
                                         resNumber={currentRes.numero}
                                         onCapture={handleAddCut}
-                                        disabled={!tipoCorte || isSaving}
+                                        disabled={isSaving}
                                     />
                                 </div>
 

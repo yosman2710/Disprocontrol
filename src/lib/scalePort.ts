@@ -1,20 +1,36 @@
-import { SerialPort } from 'serialport';
-import { ReadlineParser } from '@serialport/parser-readline';
+import type { ReadlineParser } from '@serialport/parser-readline';
+import type { SerialPort } from 'serialport';
 
 let port: SerialPort | null = null;
 let parser: ReadlineParser | null = null;
 let latestWeight = 0;
 let latestRawLine = '';
 let connected = false;
+let serialSupportError: string | null = null;
+
+async function loadSerialModules() {
+  try {
+    const [{ SerialPort }, { ReadlineParser }] = await Promise.all([
+      import('serialport'),
+      import('@serialport/parser-readline'),
+    ]);
+
+    serialSupportError = null;
+
+    return { SerialPort, ReadlineParser };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'No se pudo cargar serialport';
+
+    serialSupportError = message;
+    throw new Error(
+      `SerialPort no est\u00e1 disponible en este entorno: ${message}`
+    );
+  }
+}
 
 function extractWeight(line: string): number | null {
-  // Limpia la línea y busca un número como 452.30 o 452,30
   const clean = line.trim().replace(',', '.');
-
-  // Ejemplos que soporta:
-  // "452.30"
-  // "PESO: 452.30 kg"
-  // "ST,GS,452.30,kg"
   const match = clean.match(/-?\d+(?:\.\d+)?/);
 
   if (!match) return null;
@@ -27,12 +43,14 @@ function extractWeight(line: string): number | null {
 
 export async function connectScale() {
   if (connected && port) {
-    return { connected: true, message: 'Ya está conectada' };
+    return { connected: true, message: 'Ya est\u00e1 conectada' };
   }
+
+  const { SerialPort, ReadlineParser } = await loadSerialModules();
 
   port = new SerialPort({
     path: 'COM5',
-    baudRate: 9600,   // <- cámbialo si tu balanza usa otro
+    baudRate: 9600,
     dataBits: 8,
     stopBits: 1,
     parity: 'none',
@@ -49,7 +67,7 @@ export async function connectScale() {
     }
   });
 
-  port.on('error', (err) => {
+  port.on('error', (err: Error) => {
     console.error('Error serial:', err.message);
     connected = false;
   });
@@ -94,5 +112,7 @@ export function getScaleState() {
     connected,
     latestWeight,
     latestRawLine,
+    serialAvailable: serialSupportError === null,
+    serialError: serialSupportError,
   };
 }

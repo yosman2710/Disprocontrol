@@ -127,6 +127,11 @@
     transform: scale(0.97);
 }
 
+.btn-scale:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 .btn-sim {
     background: #1e293b;
     color: white;
