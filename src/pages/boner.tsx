@@ -4,7 +4,7 @@ import {
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { StationLogin } from '@/components/stationLogin';
-import { ScaleSimulator } from '@/components/ScaleSimulator';
+import { ScaleReal } from '@/components/ScaleReal';
 import { apiFetch } from '@/lib/api';
 import { WorkstationScaleView } from '@/components/WorkstationScaleView';
 import '../styles/boner.css';
@@ -325,7 +325,7 @@ export default function BonerPage() {
                                         </div>
                                     </div>
 
-                                    <ScaleSimulator
+                                    <ScaleReal
                                         title={`Báscula: ${tipoCorte ? tiposCorte.find(t => t.id.toString() === tipoCorte)?.nombre : 'Nuevo Corte'}`}
                                         icon={<Package size={24} />}
                                         resNumber={currentRes.numero}
