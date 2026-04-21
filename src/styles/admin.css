@@ -13,11 +13,62 @@
     --admin-accent: #9d174d;
 }
 
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-scale {
+    animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Page Layout */
 .admin-layout {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: calc(100vh / 0.75);
     background-color: var(--admin-bg-main);
+    animation: fadeIn 0.8s ease-out;
+}
+
+.admin-layout main {
+    flex: 1;
+    margin-left: var(--admin-sidebar-width);
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-layout:has(.admin-sidebar.collapsed) main {
+    margin-left: 80px;
 }
 
 /* Sidebar */
@@ -27,12 +78,14 @@
     color: var(--admin-text-main);
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    position: sticky;
+    height: calc(100vh / 0.75);
+    position: fixed;
     top: 0;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    left: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     z-index: 100;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .admin-sidebar.collapsed {
@@ -78,12 +131,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border-radius: 8px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     color: var(--admin-text-muted);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     transition: all 0.2s ease;
 }
@@ -99,9 +152,9 @@
 }
 
 .admin-nav-item svg {
-    width: 18px;
-    height: 18px;
-    min-width: 18px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
 }
 
 .admin-nav-item span {
@@ -129,6 +182,7 @@
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
+    color: #1e293b; /* Dark text for light background */
 }
 
 .admin-page-header {
@@ -139,14 +193,14 @@
 }
 
 .admin-page-title h1 {
-    font-size: 28px;
+    font-size: 32px; /* Slightly larger */
     font-weight: 700;
     color: #1e293b;
     margin: 0;
 }
 
 .admin-page-title p {
-    color: #64748b;
+    color: #475569; /* Slightly darker muted text */
     margin-top: 4px;
 }
 
@@ -168,8 +222,8 @@
 }
 
 .admin-stat-label {
-    color: #64748b;
-    font-size: 13px;
+    color: #475569; /* Darker than #64748b */
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -196,15 +250,22 @@
 /* Grid Layout */
 .admin-main-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
 }
 
 .admin-table-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.admin-table-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .card-header {
@@ -231,6 +292,33 @@
 }
 
 /* Dashboard Extras */
+.badge {
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+}
+
+.badge.pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge.en_proceso {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge.completado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge.success { background-color: #dcfce7; color: #166534; }
+.badge.warning { background-color: #fef3c7; color: #92400e; }
+.badge.info { background-color: #e0f2fe; color: #0369a1; }
 .badge-dot {
     width: 10px;
     height: 10px;
