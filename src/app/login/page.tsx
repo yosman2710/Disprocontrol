@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Beef, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/lib/api';
 import '../../styles/StationLogin.css';
 
 export default function LoginPage() {
@@ -48,24 +49,17 @@ export default function LoginPage() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const res = await fetch('https://backend-disprocar.onrender.com/auth/login', {
+            const data = await apiFetch('/auth/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: usuario, password: contrasena }),
             });
 
-            const data = await res.json();
-
-            if (res.ok) {
-                localStorage.setItem('dispro_token', data.token);
-                localStorage.setItem('dispro_user', JSON.stringify(data.user));
-                toast.success(`Bienvenido, ${data.user.role}`);
-                redirectByRole(data.user.role);
-            } else {
-                toast.error(data.message || 'Credenciales incorrectas');
-            }
-        } catch (err) {
-            toast.error('Error de conexión con el servidor');
+            localStorage.setItem('dispro_token', data.token);
+            localStorage.setItem('dispro_user', JSON.stringify(data.user));
+            toast.success(`Bienvenido, ${data.user.role}`);
+            redirectByRole(data.user.role);
+        } catch (err: any) {
+            toast.error(err.message || 'Error de conexión con el servidor');
         } finally {
             setIsLoading(false);
         }
