@@ -1,67 +1,93 @@
-import { SerialPort } from 'serialport';
-import { ReadlineParser } from '@serialport/parser-readline';
+import { SerialPort, ReadlineParser } from 'serialport';
 
-let port: SerialPort | null = null;
-let parser: ReadlineParser | null = null;
-let latestWeight = 0;
-let latestRawLine = '';
-let connected = false;
+// Patrón Singleton para evitar múltiples conexiones en modo desarrollo de Next.js
+interface ScaleState {
+  port: SerialPort | null;
+  parser: ReadlineParser | null;
+  latestWeight: number;
+  latestRawLine: string;
+  connected: boolean;
+}
+
+const globalWithScale = global as typeof globalThis & {
+  _scaleState?: ScaleState;
+};
+
+if (!globalWithScale._scaleState) {
+  globalWithScale._scaleState = {
+    port: null,
+    parser: null,
+    latestWeight: 0,
+    latestRawLine: '',
+    connected: false,
+  };
+}
+
+const state = globalWithScale._scaleState;
 
 function extractWeight(line: string): number | null {
-  // Limpia la línea y busca un número como 452.30 o 452,30
   const clean = line.trim().replace(',', '.');
-
-  // Ejemplos que soporta:
-  // "452.30"
-  // "PESO: 452.30 kg"
-  // "ST,GS,452.30,kg"
   const match = clean.match(/-?\d+(?:\.\d+)?/);
-
   if (!match) return null;
-
   const value = parseFloat(match[0]);
-  if (Number.isNaN(value)) return null;
-
-  return value;
+  return Number.isNaN(value) ? null : value;
 }
 
 export async function connectScale() {
-  if (connected && port) {
+  if (state.connected && state.port && state.port.isOpen) {
     return { connected: true, message: 'Ya está conectada' };
   }
 
-  port = new SerialPort({
+  // Si hay un puerto que quedó "colgado" pero no está abierto, lo limpiamos
+  if (state.port) {
+    try {
+      if (state.port.isOpen) await new Promise(r => state.port!.close(r));
+    } catch (e) {
+      console.log('Error cerrando puerto previo:', e);
+    }
+  }
+
+  console.log('Intentando conectar a la balanza en COM5...');
+
+  state.port = new SerialPort({
     path: 'COM5',
-    baudRate: 9600,   // <- cámbialo si tu balanza usa otro
+    baudRate: 9600,
     dataBits: 8,
     stopBits: 1,
     parity: 'none',
     autoOpen: false,
   });
 
-  parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+  state.parser = state.port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
-  parser.on('data', (line: string) => {
-    latestRawLine = line;
+  state.parser.on('data', (line: string) => {
+    console.log('Datos recibidos de balanza:', line);
+    state.latestRawLine = line;
     const weight = extractWeight(line);
     if (weight !== null) {
-      latestWeight = weight;
+      state.latestWeight = weight;
     }
   });
 
-  port.on('error', (err) => {
-    console.error('Error serial:', err.message);
-    connected = false;
+  state.port.on('error', (err) => {
+    console.error('Error serial (COM5):', err.message);
+    state.connected = false;
   });
 
-  port.on('close', () => {
-    connected = false;
+  state.port.on('close', () => {
+    console.log('Puerto COM5 cerrado');
+    state.connected = false;
   });
 
   await new Promise<void>((resolve, reject) => {
-    port!.open((err) => {
-      if (err) return reject(err);
-      connected = true;
+    state.port!.open((err) => {
+      if (err) {
+        console.error('No se pudo abrir COM5:', err.message);
+        state.connected = false;
+        return reject(err);
+      }
+      console.log('Balanza conectada exitosamente en COM5');
+      state.connected = true;
       resolve();
     });
   });
@@ -70,29 +96,43 @@ export async function connectScale() {
 }
 
 export async function disconnectScale() {
-  if (!port || !connected) {
-    connected = false;
+  if (!state.port || !state.connected) {
+    state.connected = false;
     return { connected: false, message: 'Ya estaba desconectada' };
   }
 
   await new Promise<void>((resolve, reject) => {
-    port!.close((err) => {
+    state.port!.close((err) => {
       if (err) return reject(err);
       resolve();
     });
   });
 
-  port = null;
-  parser = null;
-  connected = false;
+  state.port = null;
+  state.parser = null;
+  state.connected = false;
 
   return { connected: false, message: 'Balanza desconectada' };
 }
 
 export function getScaleState() {
   return {
-    connected,
-    latestWeight,
-    latestRawLine,
+    connected: state.connected,
+    latestWeight: state.latestWeight,
+    latestRawLine: state.latestRawLine,
   };
+}
+
+export async function listAvailablePorts() {
+  try {
+    const ports = await SerialPort.list();
+    return ports.map(p => ({
+      path: p.path,
+      manufacturer: p.manufacturer,
+      friendlyName: p.friendlyName
+    }));
+  } catch (error) {
+    console.error('Error listando puertos:', error);
+    return [];
+  }
 }

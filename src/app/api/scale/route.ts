@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectScale, disconnectScale, getScaleState } from '@/lib/scalePort';
+import { connectScale, disconnectScale, getScaleState, listAvailablePorts } from '@/lib/scalePort';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,11 +31,17 @@ export async function POST(req: Request) {
       return NextResponse.json(result);
     }
 
+    if (action === 'listPorts') {
+      const ports = await listAvailablePorts();
+      return NextResponse.json(ports);
+    }
+
     return NextResponse.json(
       { error: 'Acción no válida' },
       { status: 400 }
     );
   } catch (error: any) {
+    console.error('API Scale Error:', error);
     return NextResponse.json(
       { error: error.message || 'Error en la balanza' },
       { status: 500 }

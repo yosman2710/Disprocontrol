@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-disprocar.onrender.com';
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://backend-disprocar.onrender.com').replace(/\/$/, '');
 
 export async function apiFetch(endpoint: string, options: any = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('dispro_token') : null;
@@ -8,7 +8,10 @@ export async function apiFetch(endpoint: string, options: any = {}) {
         ...(token && { 'Authorization': `Bearer ${token}` }),
     };
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
+    // Asegurar que el endpoint empiece con /
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+    const response = await fetch(`${API_URL}${cleanEndpoint}`, {
         ...options,
         headers: { ...defaultHeaders, ...options.headers },
     });

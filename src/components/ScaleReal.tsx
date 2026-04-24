@@ -27,6 +27,7 @@ export function ScaleReal({
     const [historial, setHistorial] = useState<number[]>([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState('');
+    const [puertosDisponibles, setPuertosDisponibles] = useState<any[]>([]);
 
     useEffect(() => {
         const interval = setInterval(async () => {
@@ -77,6 +78,8 @@ export function ScaleReal({
             const data = await res.json();
 
             if (!res.ok) {
+                // Si falla COM5, listamos puertos para ver qué hay
+                await listarPuertos();
                 throw new Error(data.error || 'No se pudo conectar al puerto COM5');
             }
 
@@ -85,6 +88,20 @@ export function ScaleReal({
             setError(e.message || 'Error conectando la balanza');
         } finally {
             setCargando(false);
+        }
+    };
+
+    const listarPuertos = async () => {
+        try {
+            const res = await fetch('/api/scale', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'listPorts' }),
+            });
+            const data = await res.json();
+            setPuertosDisponibles(data);
+        } catch (err) {
+            console.error('Error al listar puertos:', err);
         }
     };
 
@@ -140,6 +157,11 @@ export function ScaleReal({
             {error && (
                 <div style={{ color: '#ff4d4f', fontSize: '14px', marginBottom: '10px' }}>
                     {error}
+                    {puertosDisponibles.length > 0 && (
+                        <div style={{ marginTop: '5px', fontSize: '12px', color: '#666' }}>
+                            Puertos encontrados: {puertosDisponibles.map(p => p.path).join(', ')}
+                        </div>
+                    )}
                 </div>
             )}
 

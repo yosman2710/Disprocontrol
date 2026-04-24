@@ -3,7 +3,7 @@ import {
     Flame, Snowflake, Scale, Scissors, Thermometer,
     ChevronLeft, CheckCircle
 } from 'lucide-react';
-import { ScaleSimulator } from './ScaleSimulator';
+import { ScaleReal } from './ScaleReal';
 import '../styles/WorkstationScaleView.css';
 
 interface Res {
@@ -181,7 +181,7 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
 
             <div className="main-work-grid">
                 {resActual && !isBoning && (
-                    <ScaleSimulator
+                    <ScaleReal
                         title={isHot ? "Peso Caliente" : "Peso Frío"}
                         icon={isHot ? <Flame size={20} className="icon-hot" /> : <Snowflake size={20} className="icon-cold" />}
                         resNumber={resActual.numero}
