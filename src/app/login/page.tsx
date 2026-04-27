@@ -15,12 +15,26 @@ export default function LoginPage() {
     const router = useRouter();
 
     useEffect(() => {
-        // Redirigir si ya está autenticado
-        const userStr = localStorage.getItem('dispro_user');
-        if (userStr) {
-            const user = JSON.parse(userStr);
-            redirectByRole(user.role);
-        }
+        // Redirigir si ya está autenticado y la sesión es válida
+        const checkExistingAuth = async () => {
+            const userStr = localStorage.getItem('dispro_user');
+            const token = localStorage.getItem('dispro_token');
+            
+            if (userStr && token) {
+                try {
+                    const { verifySession } = await import('@/lib/api');
+                    const isValid = await verifySession();
+                    if (isValid) {
+                        const user = JSON.parse(userStr);
+                        redirectByRole(user.role);
+                    }
+                } catch (e) {
+                    // Silently fail, let the user login normally
+                    console.warn('Initial session check failed:', e);
+                }
+            }
+        };
+        checkExistingAuth();
     }, []);
 
     const redirectByRole = (role: string) => {
