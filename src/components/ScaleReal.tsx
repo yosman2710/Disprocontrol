@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Plug, Unplug, RotateCcw, Save, AlertCircle } from 'lucide-react';
 import '../styles/ScaleSimulator.css';
 
@@ -27,74 +27,119 @@ export function ScaleReal({
     const [historial, setHistorial] = useState<number[]>([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState('');
-    const [puertosDisponibles, setPuertosDisponibles] = useState<any[]>([]);
+    
+    // Referencias para la Web Serial API
+    const portRef = useRef<any>(null);
+    const readerRef = useRef<any>(null);
+    const isReadingRef = useRef<boolean>(false);
 
+    // Al desmontar el componente, nos aseguramos de cerrar el puerto
     useEffect(() => {
-        const interval = setInterval(async () => {
-            try {
-                const res = await fetch('/api/scale', { cache: 'no-store' });
-                if (!res.ok) return;
-                
-                const data = await res.json();
-                setConectada(!!data.connected);
-
-                if (typeof data.latestWeight === 'number') {
-                    const peso = data.latestWeight;
-                    setPesoActual(peso);
-
-                    setHistorial((prev) => {
-                        const nuevo = [...prev, peso].slice(-5);
-                        
-                        // Lógica de estabilidad: 3 lecturas con diferencia menor a 0.2kg
-                        if (nuevo.length >= 3) {
-                            const max = Math.max(...nuevo);
-                            const min = Math.min(...nuevo);
-                            setPesoEstable(max - min <= 0.2);
-                        } else {
-                            setPesoEstable(false);
-                        }
-                        return nuevo;
-                    });
-                }
-            } catch (err) {
-                // Silencioso para no interrumpir el polling
+        return () => {
+            isReadingRef.current = false;
+            if (readerRef.current) {
+                readerRef.current.cancel().catch(console.error);
             }
-        }, 400);
-
-        return () => clearInterval(interval);
+        };
     }, []);
+
+    const procesarLineaBalanza = (linea: string) => {
+        const clean = linea.trim().replace(',', '.');
+        const match = clean.match(/-?\d+(?:\.\d+)?/);
+        
+        if (match) {
+            const peso = parseFloat(match[0]);
+            if (!Number.isNaN(peso)) {
+                setPesoActual(peso);
+
+                setHistorial((prev) => {
+                    const nuevo = [...prev, peso].slice(-5);
+                    if (nuevo.length >= 3) {
+                        const max = Math.max(...nuevo);
+                        const min = Math.min(...nuevo);
+                        setPesoEstable(max - min <= 0.2);
+                    } else {
+                        setPesoEstable(false);
+                    }
+                    return nuevo;
+                });
+            }
+        }
+    };
+
+    const leerPuerto = async () => {
+        const port = portRef.current;
+        if (!port) return;
+
+        try {
+            const textDecoder = new TextDecoderStream();
+            const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+            const reader = textDecoder.readable.getReader();
+            readerRef.current = reader;
+
+            let buffer = '';
+
+            while (isReadingRef.current) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    break;
+                }
+                if (value) {
+                    buffer += value;
+                    // Separar por salto de línea (\n o \r\n)
+                    const lineas = buffer.split(/\r?\n/);
+                    
+                    if (lineas.length > 1) {
+                        for (let i = 0; i < lineas.length - 1; i++) {
+                            procesarLineaBalanza(lineas[i]);
+                        }
+                        buffer = lineas[lineas.length - 1]; // Guardar el fragmento incompleto
+                    }
+                }
+            }
+        } catch (err: any) {
+            console.error('Error leyendo del puerto:', err);
+            // Ignore cancelation errors
+            if (err.name !== 'TypeError') {
+                setError('Se perdió la conexión con la báscula');
+            }
+            setConectada(false);
+        } finally {
+            readerRef.current?.releaseLock();
+        }
+    };
 
     const conectar = async () => {
         try {
             setCargando(true);
             setError('');
-            setPuertosDisponibles([]);
 
-            const res = await fetch('/api/scale', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'connect' }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                // Si falla, pedimos la lista de puertos para ayudar al usuario
-                const listRes = await fetch('/api/scale', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'listPorts' }),
-                });
-                const ports = await listRes.json();
-                setPuertosDisponibles(Array.isArray(ports) ? ports : []);
-                
-                throw new Error(data.error || 'No se pudo conectar al puerto COM5');
+            // 1. Verificar si el navegador soporta Web Serial
+            if (!('serial' in navigator)) {
+                throw new Error('Tu navegador no soporta la Web Serial API. Por favor, usa Google Chrome o Microsoft Edge.');
             }
 
+            // 2. Pedir al usuario que seleccione el puerto COM
+            // Esto abrirá una ventanita del navegador
+            const port = await (navigator as any).serial.requestPort();
+            portRef.current = port;
+
+            // 3. Abrir el puerto (9600 baudios es el estandar de la Doran 4300)
+            await port.open({ baudRate: 9600 });
             setConectada(true);
-            setError('');
+
+            // 4. Iniciar la lectura en bucle
+            isReadingRef.current = true;
+            leerPuerto();
+
         } catch (e: any) {
-            setError(e.message || 'Error conectando la balanza');
+            console.error(e);
+            // Si el usuario cancela la selección, el error suele ser "No port selected"
+            if (e.message?.includes('No port selected')) {
+                setError(''); // No mostrar error si simplemente canceló la ventana
+            } else {
+                setError(e.message || 'Error conectando la balanza por USB');
+            }
         } finally {
             setCargando(false);
         }
@@ -103,17 +148,31 @@ export function ScaleReal({
     const desconectar = async () => {
         try {
             setCargando(true);
-            await fetch('/api/scale', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'disconnect' }),
-            });
-            setConectada(false);
-            setPesoActual(0);
-            setPesoEstable(false);
+            isReadingRef.current = false; // Esto romperá el ciclo while en leerPuerto()
+
+            if (readerRef.current) {
+                await readerRef.current.cancel(); // Forzar la detención del reader
+            }
+
+            // Esperar un momento breve para que el reader libere el lock
+            setTimeout(async () => {
+                if (portRef.current) {
+                    try {
+                        await portRef.current.close();
+                    } catch (e) {
+                        console.error('Error cerrando puerto', e);
+                    }
+                    portRef.current = null;
+                }
+                setConectada(false);
+                setPesoActual(0);
+                setPesoEstable(false);
+                setCargando(false);
+            }, 100);
+
         } catch (e: any) {
+            console.error(e);
             setError('Error al desconectar');
-        } finally {
             setCargando(false);
         }
     };
@@ -145,11 +204,6 @@ export function ScaleReal({
                         <AlertCircle size={16} />
                         {error}
                     </div>
-                    {puertosDisponibles.length > 0 && (
-                        <div style={{ marginTop: '5px', paddingLeft: '24px' }}>
-                            Puertos detectados: {puertosDisponibles.map(p => p.path).join(', ')}
-                        </div>
-                    )}
                 </div>
             )}
 
@@ -161,7 +215,7 @@ export function ScaleReal({
                         disabled={disabled || cargando}
                     >
                         <Plug size={18} />
-                        Conectar COM5
+                        Conectar Báscula
                     </button>
                 ) : (
                     <button
@@ -185,7 +239,6 @@ export function ScaleReal({
 
             <button
                 className={`btn-capture-main ${variant}`}
-                // Habilitamos si hay peso > 0 y está conectada, incluso si la estabilidad falla por mínima oscilación
                 disabled={pesoActual <= 0.1 || disabled || !conectada}
                 onClick={() => {
                     onCapture(parseFloat(pesoActual.toFixed(2)));
