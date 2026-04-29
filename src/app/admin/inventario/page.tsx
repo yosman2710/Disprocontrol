@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { apiFetch } from '@/lib/api';
 import { Box, Search, PackageOpen, Loader2, Beef, X } from 'lucide-react';
 import Head from 'next/head';
@@ -24,8 +25,10 @@ export default function InventarioPage() {
     const [selectedItem, setSelectedItem] = useState<InventarioItem | null>(null);
     const [detalles, setDetalles] = useState<any[]>([]);
     const [loadingDetalles, setLoadingDetalles] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
         const fetchInventario = async () => {
             try {
                 const result = await apiFetch('/stocks');
@@ -171,13 +174,13 @@ export default function InventarioPage() {
                 )}
             </div>
 
-            {selectedItem && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
+            {isMounted && selectedItem && createPortal(
+                <div className={`${styles.container} ${styles.modalOverlay}`} onClick={closeModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
                             <div className={styles.modalHeaderInfo}>
-                                <h2>Detalles del Grupo</h2>
-                                <p>Código: {selectedItem.codigo} | Corte: {selectedItem.tipo_corte}</p>
+                                <h2>Detalles del Lote</h2>
+                                <p>Código: <span className={styles.highlightText}>{selectedItem.codigo}</span> | Corte: <span className={styles.highlightText}>{selectedItem.tipo_corte}</span></p>
                             </div>
                             <button className={styles.closeButton} onClick={closeModal}>
                                 <X size={20} />
@@ -185,52 +188,59 @@ export default function InventarioPage() {
                         </div>
                         <div className={styles.modalBody}>
                             {loadingDetalles ? (
-                                <div className={styles['inventario-loader']} style={{ padding: '40px' }}>
+                                <div className={styles['inventario-loader']} style={{ padding: '40px', boxShadow: 'none', border: 'none' }}>
                                     <Loader2 size={32} className="animate-spin" style={{ color: '#641B2E' }} />
                                     <span style={{ fontSize: '0.9rem' }}>Cargando unidades...</span>
                                 </div>
                             ) : detalles.length === 0 ? (
-                                <div className={styles['inventario-empty']} style={{ padding: '40px' }}>
+                                <div className={styles['inventario-empty']} style={{ padding: '40px', boxShadow: 'none', border: 'none' }}>
                                     <PackageOpen size={48} className={styles['empty-icon']} style={{ marginBottom: '16px' }} />
                                     <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.2rem' }}>No hay detalles</h3>
-                                    <p style={{ margin: '8px 0 0', color: 'var(--text-muted)' }}>No se encontraron unidades específicas para este código.</p>
+                                    <p style={{ margin: '8px 0 0', color: 'var(--text-muted)' }}>No se encontraron unidades específicas para este lote en la fecha dada.</p>
                                 </div>
                             ) : (
-                                <table className={styles.detallesTable}>
-                                    <thead>
-                                        <tr>
-                                            <th>ID Unidad</th>
-                                            <th>Calidad</th>
-                                            <th>Peso (kg)</th>
-                                            <th>Fecha Ingreso</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {detalles.map((d, i) => (
-                                            <tr key={i}>
-                                                <td>#{d.corte_id || d.inventario_id}</td>
-                                                <td>
-                                                    <span className={styles.badgeClasificacion}>
-                                                        {d.calidad || 'Estándar'}
-                                                    </span>
-                                                </td>
-                                                <td className={styles.pesoDestacado}>
-                                                    {Number(d.peso).toFixed(2)} kg
-                                                </td>
-                                                <td>
-                                                    {new Date(d.fecha).toLocaleString('es-VE', {
-                                                        dateStyle: 'medium',
-                                                        timeStyle: 'short'
-                                                    })}
-                                                </td>
+                                <div className={styles.tableWrapper}>
+                                    <table className={styles.detallesTable}>
+                                        <thead>
+                                            <tr>
+                                                <th>ID Unidad</th>
+                                                <th>Calidad</th>
+                                                <th>Peso (kg)</th>
+                                                <th>Fecha de Producción</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {detalles.map((d, i) => (
+                                                <tr key={i} style={{ animationDelay: `${i * 0.05}s` }} className={styles.tableRow}>
+                                                    <td>
+                                                        <div className={styles.idBadge}>
+                                                            #{d.corte_id || d.inventario_id}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`${styles.badgeClasificacion} ${styles['badge' + (d.calidad || 'estandar').toLowerCase().replace(/\s+/g, '')]}`}>
+                                                            {d.calidad || 'Estándar'}
+                                                        </span>
+                                                    </td>
+                                                    <td className={styles.pesoDestacado}>
+                                                        {Number(d.peso).toFixed(2)} <span className={styles.pesoUnidad}>kg</span>
+                                                    </td>
+                                                    <td className={styles.fechaCell}>
+                                                        {new Date(d.fecha).toLocaleString('es-VE', {
+                                                            dateStyle: 'medium',
+                                                            timeStyle: 'short'
+                                                        })}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             )}
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

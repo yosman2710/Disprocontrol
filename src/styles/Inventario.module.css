@@ -336,16 +336,83 @@
 
 .badgeClasificacion {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 20px;
     font-size: 0.75rem;
-    font-weight: 700;
-    background: #fef3c7;
-    color: #92400e;
+    font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.badgeprimera {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.badgesegunda {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.badgepremium {
+    background: #fdf2f8;
+    color: #be185d;
 }
 
 .pesoDestacado {
     font-weight: 800;
     color: var(--primary);
+    font-size: 1.05rem;
+}
+
+.pesoUnidad {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.highlightText {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.tableWrapper {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.tableRow {
+    animation: fadeInRow 0.4s ease-out backwards;
+}
+
+@keyframes fadeInRow {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.tableRow:hover td {
+    background-color: #f8fafc;
+}
+
+.idBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+    border: 1px solid #e2e8f0;
+}
+
+.fechaCell {
+    color: var(--text-muted);
+    font-size: 0.85rem !important;
 }
