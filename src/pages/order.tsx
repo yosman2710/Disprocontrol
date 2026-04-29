@@ -208,7 +208,7 @@ export default function Order() {
                     <div className="overlay">
                         <div className="modal">
                             <button className="closeBtn" onClick={() => setModalNuevo(false)}>&times;</button>
-                            <h2 style={{ fontFamily: 'serif' }}>Registrar Nueva Orden</h2>
+                            <h2 style={{ fontFamily: 'serif', marginTop: 0, marginBottom: '10px' }}>Registrar Nueva Orden</h2>
 
                             <form onSubmit={handleCreateOrder}>
                                 <p className="sectionTitle">Origen</p>
@@ -318,7 +318,7 @@ export default function Order() {
                                     </div>
                                 </div>
 
-                                <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                                     <button
                                         type="button"
                                         onClick={() => setModalNuevo(false)}

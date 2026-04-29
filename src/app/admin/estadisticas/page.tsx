@@ -279,7 +279,7 @@ export default function Estadisticas() {
                 <div style={{ animationDelay: '0.2s' }} className={styles.statCardWrapper}>
                     <StatCard
                         title="Peso Total"
-                        value={kpis.pesoTotal > 1000 ? `${(kpis.pesoTotal / 1000).toFixed(1)}t` : `${kpis.pesoTotal.toFixed(0)}kg`}
+                        value={`${kpis.pesoTotal.toLocaleString('es-ES', { maximumFractionDigits: 1 })} kg`}
                         subtitle="Producción total acumulada"
                         icon={Scale}
                         accentColor="#9d174d"

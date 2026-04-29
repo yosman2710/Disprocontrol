@@ -268,19 +268,19 @@ body {
     background: white;
     width: 100%;
     max-width: 800px;
-    max-height: 90vh;
-    border-radius: 32px;
+    max-height: 95vh;
+    border-radius: 24px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     overflow-y: auto;
     position: relative;
-    padding: 48px;
+    padding: 32px 40px;
     animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .closeBtn {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    top: 24px;
+    right: 24px;
     background: #f7fafc;
     border: none;
     width: 48px;
@@ -309,24 +309,24 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     border-bottom: 2px solid #edf2f7;
-    padding-bottom: 12px;
-    margin: 32px 0 24px;
+    padding-bottom: 8px;
+    margin: 20px 0 16px;
 }
 
 .formGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 24px;
+    gap: 16px;
 }
 
 .fieldGroup {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .fieldGroup label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -335,11 +335,12 @@ body {
 
 .fieldGroup input,
 .fieldGroup select {
-    padding: 16px;
+    padding: 12px 16px;
     border: 2px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 10px;
     background: #fcfcfc;
-    font-size: 1.1rem;
+    color: var(--text-color);
+    font-size: 1rem;
     transition: all 0.2s ease;
 }
 

@@ -217,4 +217,135 @@
     width: 64px;
     height: 64px;
     margin-bottom: 24px;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modalContent {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    animation: modalIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modalHeader {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-cream);
+}
+
+.modalHeaderInfo h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.modalHeaderInfo p {
+    margin: 0.5rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.closeButton {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeButton:hover {
+    background: #f1f5f9;
+    color: var(--text-main);
+    transform: rotate(90deg);
+}
+
+.modalBody {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.detallesTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.detallesTable th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--border);
+}
+
+.detallesTable td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+
+.detallesTable tr:last-child td {
+    border-bottom: none;
+}
+
+.badgeClasificacion {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #fef3c7;
+    color: #92400e;
+    text-transform: uppercase;
+}
+
+.pesoDestacado {
+    font-weight: 800;
+    color: var(--primary);
 }
