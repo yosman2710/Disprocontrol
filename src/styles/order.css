@@ -869,3 +869,393 @@ body {
 }
 
 .rdm-close-btn:hover { background: #e2e8f0; }
+
+
+/* ================================================================
+   MODAL NUEVA ORDEN  — nmo-*   (diseño premium ampliado)
+   ================================================================ */
+
+.nmo-modal {
+    max-width: 960px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 94vh;
+}
+
+.nmo-modal form {
+    overflow-y: auto;
+    flex: 1;
+    padding: 28px 40px 0;
+}
+
+/* Section header with accent bar */
+.nmo-modal .sectionTitle {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nmo-modal .sectionTitle::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 14px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+.nmo-modal .sectionTitle:first-of-type { margin-top: 0; }
+
+/* Bigger inputs in this modal */
+.nmo-modal .fieldGroup label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.nmo-modal .fieldGroup input,
+.nmo-modal .fieldGroup select {
+    padding: 13px 16px;
+    font-size: 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    color: #1a202c;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nmo-modal .fieldGroup input:focus,
+.nmo-modal .fieldGroup select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(100,27,46,0.08);
+    outline: none;
+    background: white;
+}
+
+/* Grid layouts */
+.nmo-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.nmo-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Lote container */
+.nmo-lote-card {
+    background: #fafafa;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Chip-style legend */
+.nmo-tipos-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 14px;
+    background: white;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+}
+
+.nmo-tipos-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.nmo-tipos-legend b { color: var(--primary-color); font-weight: 800; }
+
+/* Lote row as a card */
+.nmo-lote-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nmo-lote-row:focus-within {
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px rgba(246,181,59,0.15);
+}
+
+.nmo-lote-tipo { flex: 2; }
+.nmo-lote-cant { flex: 1; }
+.nmo-lote-row .fieldGroup { margin: 0; }
+
+.nmo-lote-row .fieldGroup label {
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    color: #94a3b8; text-transform: uppercase;
+    display: block; margin-bottom: 5px;
+}
+
+.nmo-lote-row .fieldGroup input,
+.nmo-lote-row .fieldGroup select {
+    padding: 11px 14px; font-size: 14px; font-weight: 600;
+    border: 1.5px solid #e2e8f0; border-radius: 9px;
+    background: #f8fafc; width: 100%; box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.nmo-lote-row .fieldGroup input:focus,
+.nmo-lote-row .fieldGroup select:focus {
+    border-color: var(--primary-color);
+    background: white; outline: none;
+    box-shadow: 0 0 0 3px rgba(100,27,46,0.07);
+}
+
+.nmo-remove-btn {
+    width: 38px; height: 38px; border-radius: 9px;
+    background: #fef2f2; border: 1.5px solid #fecaca;
+    color: #ef4444; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-bottom: 1px; transition: all 0.15s;
+}
+
+.nmo-remove-btn:hover { background: #fee2e2; border-color: #ef4444; }
+
+/* Lote footer */
+.nmo-lote-footer {
+    display: flex; align-items: center;
+    justify-content: space-between; padding-top: 6px;
+}
+
+.nmo-add-btn {
+    background: white; border: 1.5px solid var(--border-color);
+    color: var(--primary-color); padding: 10px 20px;
+    border-radius: 10px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+}
+
+.nmo-add-btn:hover:not(:disabled) {
+    background: #fef2f2; border-color: var(--primary-color);
+}
+
+.nmo-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.nmo-total { font-size: 14px; color: #64748b; font-weight: 500; }
+.nmo-total strong { color: var(--primary-color); font-size: 18px; font-weight: 800; margin-left: 4px; }
+
+/* Textarea */
+.nmo-textarea {
+    width: 100%; min-height: 72px; padding: 13px 16px;
+    border-radius: 10px; border: 1.5px solid #e2e8f0;
+    background: white; font-size: 14px; font-family: inherit;
+    resize: vertical; outline: none; color: #1a202c;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.nmo-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(100,27,46,0.08);
+}
+
+/* Sticky action footer */
+.nmo-actions {
+    display: flex; justify-content: flex-end;
+    align-items: center; gap: 12px;
+    margin-top: 28px; padding: 20px 40px;
+    border-top: 1px solid #f1f5f9;
+    background: #fcfcfc; flex-shrink: 0;
+    border-radius: 0 0 24px 24px;
+}
+
+.nmo-cancel-btn {
+    padding: 13px 28px; border-radius: 10px;
+    border: 1.5px solid #e2e8f0; background: white;
+    color: #64748b; font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: all 0.15s;
+}
+
+.nmo-cancel-btn:hover { background: #f1f5f9; }
+
+.nmo-modal .btnNuevo {
+    padding: 13px 32px; font-size: 15px;
+    font-weight: 700; border-radius: 10px;
+}
+
+
+.nmo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 20px;
+}
+
+/* 3-column grid for transport */
+.nmo-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+/* 2-column grid */
+.nmo-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+/* ── Lote card ── */
+.nmo-lote-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Abbreviation legend */
+.nmo-tipos-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 10px 12px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.nmo-tipos-legend b { color: var(--primary-color); }
+
+/* Lote row: tipo + cantidad + remove */
+.nmo-lote-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.nmo-lote-tipo { flex: 2; }
+.nmo-lote-cant { flex: 1; }
+
+.nmo-remove-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #ef4444;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.nmo-remove-btn:hover { background: #fee2e2; }
+
+/* Footer: add button + total */
+.nmo-lote-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 4px;
+}
+
+.nmo-add-btn {
+    background: white;
+    border: 1.5px solid var(--border-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nmo-add-btn:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: var(--primary-color);
+}
+
+.nmo-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.nmo-total { font-size: 13px; color: #64748b; }
+.nmo-total strong { color: var(--primary-color); font-size: 15px; }
+
+/* Textarea */
+.nmo-textarea {
+    width: 100%;
+    min-height: 64px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    background: #fcfcfc;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.nmo-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(100,27,46,0.08);
+}
+
+/* Action buttons row */
+.nmo-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.nmo-cancel-btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nmo-cancel-btn:hover { background: #f8fafc; border-color: #cbd5e1; }

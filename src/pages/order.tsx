@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../styles/order.css';
 import { StationLogin } from '@/components/stationLogin';
-import { Ticket, ChevronLeft, Loader2, PlusCircle } from 'lucide-react';
+import { Ticket, ChevronLeft, Loader2, PlusCircle, LayoutDashboard } from 'lucide-react';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
 
@@ -24,6 +24,16 @@ export default function Order() {
     const [searchTerm, setSearchTerm] = useState('');
 
     // Form state
+    const TIPOS_RES = [
+        { value: 'Novillo', abrev: 'NO' },
+        { value: 'Novilla', abrev: 'NA' },
+        { value: 'Torete', abrev: 'TE' },
+        { value: 'Toro', abrev: 'TO' },
+        { value: 'Buvillo', abrev: 'BO' },
+        { value: 'Buvilla', abrev: 'BA' },
+        { value: 'Vaca', abrev: 'VA' },
+    ];
+
     const [formData, setFormData] = useState({
         proveedor_id: '',
         matadero_id: '',
@@ -34,11 +44,13 @@ export default function Order() {
         condicion_vehiculo: 'Bien',
         condicion_cestas: 'Bien',
         observaciones: '',
-        cantidad_res: '',
-        sexo: 'Mixto',
-        clasificacion: 'Premium',
+        peso_promedio: '',
         fecha_matanza: new Date().toISOString().split('T')[0]
     });
+
+    const [resLote, setResLote] = useState<{tipo_de_res: string; cantidad: string}[]>([
+        { tipo_de_res: 'Novillo', cantidad: '' }
+    ]);
 
     const router = useRouter();
 
@@ -107,36 +119,48 @@ export default function Order() {
         }
     };
 
+    const addLoteRow = () => {
+        const usedTypes = new Set(resLote.map(r => r.tipo_de_res));
+        const next = TIPOS_RES.find(t => !usedTypes.has(t.value));
+        if (!next) return;
+        setResLote([...resLote, { tipo_de_res: next.value, cantidad: '' }]);
+    };
+    const removeLoteRow = (idx: number) => {
+        if (resLote.length <= 1) return;
+        setResLote(resLote.filter((_, i) => i !== idx));
+    };
+    const updateLoteRow = (idx: number, field: 'tipo_de_res' | 'cantidad', value: string) =>
+        setResLote(resLote.map((r, i) => i === idx ? { ...r, [field]: value } : r));
+    const totalReses = resLote.reduce((sum, r) => sum + (parseInt(r.cantidad) || 0), 0);
+
     const handleCreateOrder = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (totalReses === 0) { toast.error('Debe agregar al menos una res al lote'); return; }
         setIsSubmitting(true);
         try {
+            const lote = resLote.filter(r => parseInt(r.cantidad) > 0).map(r => ({
+                tipo_de_res: r.tipo_de_res,
+                cantidad: parseInt(r.cantidad)
+            }));
             await apiFetch('/orden-compra', {
                 method: 'POST',
                 body: JSON.stringify({
                     ...formData,
-                    temperatura: parseFloat(formData.temperatura),
+                    temperatura: parseFloat(formData.temperatura || '0'),
                     temp_termoking: parseFloat(formData.temp_termoking || '0'),
-                    cantidad_res: parseInt(formData.cantidad_res)
+                    peso_promedio: parseFloat(formData.peso_promedio || '0'),
+                    cantidad_res: totalReses,
+                    lote
                 })
             });
             toast.success('Orden registrada con éxito');
             setModalNuevo(false);
             fetchData();
-            // Reset form
+            setResLote([{ tipo_de_res: 'Novillo', cantidad: '' }]);
             setFormData({
-                proveedor_id: '',
-                matadero_id: '',
-                placa: '',
-                chofer: '',
-                temperatura: '',
-                temp_termoking: '',
-                condicion_vehiculo: 'Bien',
-                condicion_cestas: 'Bien',
-                observaciones: '',
-                cantidad_res: '',
-                sexo: 'Mixto',
-                clasificacion: 'Premium',
+                proveedor_id: '', matadero_id: '', placa: '', chofer: '',
+                temperatura: '', temp_termoking: '', condicion_vehiculo: 'Bien',
+                condicion_cestas: 'Bien', observaciones: '', peso_promedio: '',
                 fecha_matanza: new Date().toISOString().split('T')[0]
             });
         } catch (error: any) {
@@ -166,10 +190,19 @@ export default function Order() {
                         <h1>Registro de Ordenes</h1>
                         <p>Gestión de recepción de ganado</p>
                     </div>
-                    <button className="btnNuevo" onClick={() => setModalNuevo(true)}>
-                        <PlusCircle size={20} style={{ marginRight: '8px' }} />
-                        Nueva Orden
-                    </button>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        <button
+                            className="btnBack"
+                            onClick={() => router.push('/')}
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 22px', fontSize: '0.95rem' }}
+                        >
+                            <LayoutDashboard size={18} /> Panel Principal
+                        </button>
+                        <button className="btnNuevo" onClick={() => setModalNuevo(true)}>
+                            <PlusCircle size={20} style={{ marginRight: '8px' }} />
+                            Nueva Orden
+                        </button>
+                    </div>
                 </header>
 
                 <input
@@ -215,161 +248,127 @@ export default function Order() {
                 {/* MODAL: NUEVA ORDEN */}
                 {modalNuevo && (
                     <div className="overlay">
-                        <div className="modal">
-                            <button className="closeBtn" onClick={() => setModalNuevo(false)}>&times;</button>
-                            <h2 style={{ fontFamily: 'serif', marginTop: 0, marginBottom: '10px' }}>Registrar Nueva Orden</h2>
+                        <div className="modal nmo-modal">
+                            <button className="closeBtn" onClick={() => { setModalNuevo(false); setResLote([{ tipo_de_res: 'Novillo', cantidad: '' }]); }}>&times;</button>
 
-                            <form onSubmit={handleCreateOrder}>
+                            <form onSubmit={handleCreateOrder} id="nmo-form">
+                                <h2 className="nmo-title">Registrar Nueva Orden</h2>
+                                {/* ORIGEN */}
                                 <p className="sectionTitle">Origen</p>
                                 <div className="formGrid" style={{ gridTemplateColumns: '1fr 1fr' }}>
                                     <div className="fieldGroup">
                                         <label>Proveedor</label>
-                                        <select
-                                            value={formData.proveedor_id}
-                                            onChange={(e) => setFormData({ ...formData, proveedor_id: e.target.value })}
-                                            required
-                                        >
+                                        <select value={formData.proveedor_id} onChange={e => setFormData({...formData, proveedor_id: e.target.value})} required>
                                             <option value="">Seleccione Proveedor</option>
                                             {proveedores.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                                         </select>
                                     </div>
                                     <div className="fieldGroup">
                                         <label>Matadero</label>
-                                        <select
-                                            value={formData.matadero_id}
-                                            onChange={(e) => setFormData({ ...formData, matadero_id: e.target.value })}
-                                            required
-                                        >
+                                        <select value={formData.matadero_id} onChange={e => setFormData({...formData, matadero_id: e.target.value})} required>
                                             <option value="">Seleccione Matadero</option>
                                             {mataderos.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
                                         </select>
                                     </div>
                                 </div>
 
-                                <p className="sectionTitle">Transporte</p>
-                                <div className="formGrid">
+                                {/* TRANSPORTE Y CONDICIONES */}
+                                <p className="sectionTitle">Transporte y Condiciones</p>
+                                <div className="nmo-grid-3">
                                     <div className="fieldGroup">
                                         <label>Placa</label>
-                                        <input
-                                            placeholder="ABC-123"
-                                            value={formData.placa}
-                                            onChange={(e) => setFormData({ ...formData, placa: e.target.value })}
-                                            required
-                                        />
+                                        <input placeholder="ASD841" value={formData.placa} onChange={e => setFormData({...formData, placa: e.target.value})} required />
                                     </div>
                                     <div className="fieldGroup">
                                         <label>Chofer</label>
-                                        <input
-                                            placeholder="Nombre"
-                                            value={formData.chofer}
-                                            onChange={(e) => setFormData({ ...formData, chofer: e.target.value })}
-                                            required
-                                        />
+                                        <input placeholder="Nombre del chofer" value={formData.chofer} onChange={e => setFormData({...formData, chofer: e.target.value})} required />
                                     </div>
                                     <div className="fieldGroup">
                                         <label>Temp Termoking (°C)</label>
-                                        <input
-                                            type="number"
-                                            step="0.1"
-                                            placeholder="2.0"
-                                            value={formData.temp_termoking}
-                                            onChange={(e) => setFormData({ ...formData, temp_termoking: e.target.value })}
-                                        />
+                                        <input type="number" step="0.1" placeholder="-8" value={formData.temp_termoking} onChange={e => setFormData({...formData, temp_termoking: e.target.value})} />
                                     </div>
                                     <div className="fieldGroup">
-                                        <label>Condición Vehículo</label>
-                                        <select
-                                            value={formData.condicion_vehiculo}
-                                            onChange={(e) => setFormData({ ...formData, condicion_vehiculo: e.target.value })}
-                                        >
-                                            <option value="Bien">Bien</option>
-                                            <option value="Mal">Mal</option>
+                                        <label>Condición del Vehículo</label>
+                                        <select value={formData.condicion_vehiculo} onChange={e => setFormData({...formData, condicion_vehiculo: e.target.value})}>
+                                            <option>Bien</option><option>Mal</option>
                                         </select>
                                     </div>
                                     <div className="fieldGroup">
-                                        <label>Condición Cestas</label>
-                                        <select
-                                            value={formData.condicion_cestas}
-                                            onChange={(e) => setFormData({ ...formData, condicion_cestas: e.target.value })}
-                                        >
-                                            <option value="Bien">Bien</option>
-                                            <option value="Mal">Mal</option>
+                                        <label>Condición de las Cestas</label>
+                                        <select value={formData.condicion_cestas} onChange={e => setFormData({...formData, condicion_cestas: e.target.value})}>
+                                            <option>Bien</option><option>Mal</option>
                                         </select>
                                     </div>
-                                </div>
-
-                                <p className="sectionTitle">Ganado</p>
-                                <div className="formGrid">
-                                    <div className="fieldGroup">
-                                        <label>Cantidad</label>
-                                        <input
-                                            type="number"
-                                            value={formData.cantidad_res}
-                                            onChange={(e) => setFormData({ ...formData, cantidad_res: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="fieldGroup">
-                                        <label>Sexo</label>
-                                        <select
-                                            value={formData.sexo}
-                                            onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
-                                        >
-                                            <option value="Mixto">Mixto</option>
-                                            <option value="Macho">Macho</option>
-                                            <option value="Hembra">Hembra</option>
-                                        </select>
-                                    </div>
-                                    <div className="fieldGroup">
-                                        <label>Clasificación</label>
-                                        <select
-                                            value={formData.clasificacion}
-                                            onChange={(e) => setFormData({ ...formData, clasificacion: e.target.value })}
-                                        >
-                                            <option value="Premium">Premium</option>
-                                            <option value="Primera">Primera</option>
-                                            <option value="Segunda">Segunda</option>
-                                            <option value="Industrial">Industrial</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="formGrid" style={{ marginTop: '10px' }}>
                                     <div className="fieldGroup">
                                         <label>Fecha de Matanza</label>
-                                        <input
-                                            type="date"
-                                            value={formData.fecha_matanza}
-                                            onChange={(e) => setFormData({ ...formData, fecha_matanza: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="fieldGroup" style={{ gridColumn: 'span 2' }}>
-                                        <label>Observaciones de Recepción</label>
-                                        <textarea
-                                            placeholder="Ingrese observaciones sobre el estado de la carga o el ganado..."
-                                            value={formData.observaciones}
-                                            onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
-                                            style={{ width: '100%', minHeight: '60px', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                                        />
+                                        <input type="date" value={formData.fecha_matanza} onChange={e => setFormData({...formData, fecha_matanza: e.target.value})} required />
                                     </div>
                                 </div>
 
-                                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                                    <button
-                                        type="button"
-                                        onClick={() => setModalNuevo(false)}
-                                        style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid #ccc', background: 'none' }}
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button type="submit" className="btnNuevo" disabled={isSubmitting}>
-                                        {isSubmitting ? (
-                                            <Loader2 className="animate-spin" size={18} />
-                                        ) : 'Registrar Orden'}
-                                    </button>
+                                {/* DETALLE DE RESES (LOTE) */}
+                                <p className="sectionTitle">Detalle de Reses (Lote)</p>
+                                <div className="nmo-lote-card">
+                                    <div className="nmo-tipos-legend">
+                                        {TIPOS_RES.map(t => <span key={t.value}><b>{t.abrev}</b> = {t.value}</span>)}
+                                    </div>
+                                    {resLote.map((row, idx) => (
+                                        <div key={idx} className="nmo-lote-row">
+                                            <div className="fieldGroup nmo-lote-tipo">
+                                                <label>Tipo de Res</label>
+                                                <select value={row.tipo_de_res} onChange={e => updateLoteRow(idx, 'tipo_de_res', e.target.value)}>
+                                                    {TIPOS_RES.map(t => <option key={t.value} value={t.value}>{t.value} ({t.abrev})</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="fieldGroup nmo-lote-cant">
+                                                <label>Cantidad</label>
+                                                <input type="number" min="1" placeholder="0" value={row.cantidad} onChange={e => updateLoteRow(idx, 'cantidad', e.target.value)} required />
+                                            </div>
+                                            {resLote.length > 1 && (
+                                                <button type="button" className="nmo-remove-btn" onClick={() => removeLoteRow(idx)}>×</button>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div className="nmo-lote-footer">
+                                        <button type="button" className="nmo-add-btn" onClick={addLoteRow} disabled={resLote.length >= TIPOS_RES.length}>
+                                            + Agregar otro tipo
+                                        </button>
+                                        <span className="nmo-total">
+                                            Total: <strong>{totalReses} reses</strong>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* DATOS ADICIONALES */}
+                                <div className="nmo-grid-2" style={{ marginTop: '16px' }}>
+                                    <div className="fieldGroup">
+                                        <label>Temp Promedio de la Carne (°C)</label>
+                                        <input type="number" step="0.1" placeholder="Ej: 4.5" value={formData.temperatura} onChange={e => setFormData({...formData, temperatura: e.target.value})} />
+                                    </div>
+                                    <div className="fieldGroup">
+                                        <label>Peso Promedio Esperado (kg)</label>
+                                        <input type="number" step="0.1" placeholder="Ej: 220" value={formData.peso_promedio} onChange={e => setFormData({...formData, peso_promedio: e.target.value})} />
+                                    </div>
+                                </div>
+
+                                <div className="fieldGroup" style={{ marginTop: '12px' }}>
+                                    <label>Observaciones</label>
+                                    <textarea
+                                        placeholder="Estado de la carga, observaciones generales..."
+                                        value={formData.observaciones}
+                                        onChange={e => setFormData({...formData, observaciones: e.target.value})}
+                                        className="nmo-textarea"
+                                    />
                                 </div>
                             </form>
+
+                            <div className="nmo-actions">
+                                <button type="button" className="nmo-cancel-btn" onClick={() => { setModalNuevo(false); setResLote([{ tipo_de_res: 'Novillo', cantidad: '' }]); }}>
+                                    Cancelar
+                                </button>
+                                <button type="submit" form="nmo-form" className="btnNuevo" disabled={isSubmitting || totalReses === 0}>
+                                    {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : 'Registrar Orden'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

@@ -235,10 +235,19 @@ export default function RecepcionPage() {
                                         <label>Tipo de Res</label>
                                         <select id="ws-tipo-res" value={resForm.tipo_res}
                                             onChange={e => setResForm({ ...resForm, tipo_res: e.target.value })}>
-                                            <option>Novillo</option><option>Novilla</option>
-                                            <option>Torete</option><option>Toro</option>
-                                            <option>Buvillo</option><option>Buvilla</option>
-                                            <option>Vaca</option>
+                                            {(selectedOrder.lote?.length > 0 ? selectedOrder.lote : [
+                                                {tipo_de_res:'Novillo'},{tipo_de_res:'Novilla'},{tipo_de_res:'Torete'},
+                                                {tipo_de_res:'Toro'},{tipo_de_res:'Buvillo'},{tipo_de_res:'Buvilla'},{tipo_de_res:'Vaca'}
+                                            ]).map((item: any) => {
+                                                const weighed = carcasses.filter(c => c.tipo_de_res === item.tipo_de_res).length;
+                                                const quota = item.cantidad ? ` (${weighed}/${item.cantidad})` : '';
+                                                const full = item.cantidad && weighed >= item.cantidad;
+                                                return (
+                                                    <option key={item.tipo_de_res} value={item.tipo_de_res} disabled={!!full}>
+                                                        {item.tipo_de_res}{quota}{full ? ' ✓ Completado' : ''}
+                                                    </option>
+                                                );
+                                            })}
                                         </select>
                                     </div>
                                     <div className="ws-field">
