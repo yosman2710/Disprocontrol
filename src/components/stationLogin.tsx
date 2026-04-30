@@ -40,13 +40,10 @@ export function StationLogin({ stationName, stationIcon, stationColor, targetRol
     const redirectByRole = (role: string) => {
         switch (role) {
             case 'pesador_caliente':
-                router.push('/heavy_hot');
-                break;
-            case 'pesador_frio':
-                router.push('/heavy_cold');
+                router.push('/recepcion');
                 break;
             case 'deshuesador':
-                router.push('/boner');
+                router.push('/corte_items');
                 break;
             case 'registrador':
                 router.push('/order');
@@ -78,27 +75,6 @@ export function StationLogin({ stationName, stationIcon, stationColor, targetRol
 
     return (
         <>
-            {/* Botón de Logout (esquina superior derecha) */}
-            <button
-                onClick={handleLogout}
-                className="logout-btn"
-                style={{ position: 'fixed', top: '20px', right: '40px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: '#fef2f2', border: '1px solid #fee2e2', color: '#991b1b', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
-            >
-                <LogOut size={18} />
-                Cerrar Sesión
-            </button>
-
-            {/* Botón flotante para volver (solo admin) */}
-            {JSON.parse(localStorage.getItem('dispro_user') || '{}').role === 'admin' && (
-                <button
-                    onClick={() => router.push('/')}
-                    className="back-btn"
-                    style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', background: 'white', border: '1px solid #e2e8f0', color: '#475569', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}
-                >
-                    <ArrowLeft size={20} />
-                    Panel Principal
-                </button>
-            )}
             {children}
         </>
     );

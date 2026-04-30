@@ -181,7 +181,7 @@ interface ScaleRealProps {
     resNumber: number;
     onCapture: (peso: number) => void;
     disabled?: boolean;
-    variant?: 'hot' | 'cold';
+    variant?: 'hot' | 'corte';
 }
 
 export function ScaleReal({

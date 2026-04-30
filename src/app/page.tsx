@@ -15,24 +15,17 @@ const sections = [
     colorClass: 'bg-primary',
   },
   {
-    title: 'Peso Caliente',
-    description: 'Báscula de sacrificio',
+    title: 'Recepción',
+    description: 'Recepción de materia prima',
     icon: Flame,
-    path: '/heavy_hot',
+    path: '/recepcion',
     colorClass: 'bg-destructive',
   },
   {
-    title: 'Peso Frío',
-    description: 'Salida de cava fría',
-    icon: Snowflake,
-    path: '/heavy_cold',
-    colorClass: 'bg-info',
-  },
-  {
-    title: 'Deshuesado',
+    title: 'Corte de Ítems',
     description: 'Control de cortes y mermas',
     icon: Scissors,
-    path: '/boner',
+    path: '/corte_items',
     colorClass: 'bg-accent',
   },
 ];
@@ -54,13 +47,10 @@ export default function OperacionesPage() {
       // Redirigir a su sección correspondiente
       switch (user.role) {
         case 'pesador_caliente':
-          router.push('/heavy_hot');
-          break;
-        case 'pesador_frio':
-          router.push('/heavy_cold');
+          router.push('/recepcion');
           break;
         case 'deshuesador':
-          router.push('/boner');
+          router.push('/corte_items');
           break;
         case 'registrador':
           router.push('/order');

@@ -23,7 +23,7 @@ interface Ticket {
 }
 
 interface Props {
-    type: 'caliente' | 'frio' | 'deshuesado';
+    type: 'caliente' | 'corte';
     ticket: Ticket;
     currentResIndex: number;
     onBack: () => void;
@@ -34,22 +34,20 @@ interface Props {
 
 export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, onCapture, onFreeze, onBone }: Props) => {
     const isHot = type === 'caliente';
-    const isCold = type === 'frio';
-    const isBoning = type === 'deshuesado';
+    const isCorte = type === 'corte';
 
     const resActual = ticket.reses[currentResIndex];
 
     // Get theme class
-    const themeClass = isHot ? 'theme-hot' : (isCold ? 'theme-cold' : 'theme-boning');
+    const themeClass = isHot ? 'theme-hot' : 'theme-boning';
 
     // Counts for Hot View
     const resesPendientesCaliente = ticket.reses.filter(r => r.peso === null).length;
-    const resesProcesadasCaliente = ticket.reses.filter(r => r.peso !== null && r.estado !== 'congelador').length;
+    const resesProcesadasCaliente = ticket.reses.filter(r => r.peso !== null).length;
     const resesCongeladas = ticket.reses.filter(r => r.estado === 'congelador').length;
 
-    // Counts for Cold View
-    const resesPesoFrio = ticket.reses.filter(r => r.estado === 'pesado_frio').length;
-    const resesDesguazadas = ticket.reses.filter(r => r.estado === 'desguazado' || r.estado === 'completado').length;
+    // Counts for Corte View
+    const resesCorte = ticket.reses.filter(r => r.estado === 'desguazado' || r.estado === 'completado').length;
 
     return (
         <div className={`workstation-wrapper ${themeClass}`}>
@@ -60,21 +58,15 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                     <div className="ticket-meta">
                         <h2 className="ticket-id-title">ORD-{ticket.id}</h2>
                         <span className="status-label-sub">
-                            {isHot ? 'Pesaje Caliente' : (isCold ? 'Pesaje Frío' : 'Estación de Deshuese')}
+                            {isHot ? 'Recepción y Pesaje' : 'Estación de Corte de Ítems'}
                         </span>
                     </div>
                 </div>
 
-                <div className="info-summary-grid" style={{ gridTemplateColumns: isBoning ? 'repeat(6, 1fr)' : 'repeat(5, 1fr)' }}>
+                <div className="info-summary-grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)' }}>
                     <div className="summary-item"><label>Proveedor</label><span>{ticket.proveedor}</span></div>
                     <div className="summary-item"><label>Matadero</label><span>{ticket.matadero}</span></div>
                     <div className="summary-item"><label>Vehículo</label><span>{ticket.placa}</span></div>
-                    {isBoning && (
-                        <div className="summary-item" style={{ borderLeft: '3px solid #7c3aed' }}>
-                            <label>Peso Frío (REF)</label>
-                            <span style={{ color: '#7c3aed' }}>{resActual?.peso ? `${resActual.peso} kg` : '---'}</span>
-                        </div>
-                    )}
                     <div className="summary-item"><label>Temperatura</label><span className="temp-val">{ticket.temperatura}°C</span></div>
                     <div className="summary-item"><label>Reses</label><span>{ticket.reses.length}</span></div>
                 </div>
@@ -84,7 +76,7 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
             <div className="process-flow-card">
                 <h3 className="section-title">Flujo de Proceso</h3>
 
-                <div className="flow-steps-grid">
+                <div className="flow-steps-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
                     <div className={`flow-step ${isHot && resesProcesadasCaliente < ticket.reses.length ? 'active' : 'done'}`}>
                         <div className="step-circle done">
                             <Thermometer size={24} />
@@ -95,41 +87,33 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
 
                     <div className={`flow-step ${isHot ? 'active' : 'done'}`}>
                         <div className={`step-circle ${(isHot ? resesProcesadasCaliente > 0 : true) ? 'done' : ''}`}>
-                            <Flame size={24} />
+                            <Scale size={24} />
                         </div>
-                        <span className="step-label">Peso Caliente</span>
+                        <span className="step-label">Pesaje</span>
                         <span className="step-count">{isHot ? resesProcesadasCaliente : ticket.reses.length}</span>
                     </div>
 
-                    <div className={`flow-step ${isCold || resesCongeladas > 0 ? 'active' : (isBoning ? 'done' : '')}`}>
-                        <div className={`step-circle ${isCold || resesCongeladas > 0 || isBoning ? 'done' : ''}`}>
+                    <div className={`flow-step ${resesCongeladas > 0 ? 'active' : (isCorte ? 'done' : '')}`}>
+                        <div className={`step-circle ${resesCongeladas > 0 || isCorte ? 'done' : ''}`}>
                             <Snowflake size={24} />
                         </div>
                         <span className="step-label">Congelador</span>
                         <span className="step-count">{resesCongeladas}</span>
                     </div>
 
-                    <div className={`flow-step ${isCold ? 'active' : (isBoning ? 'done' : 'disabled')} ${resesPesoFrio > 0 ? 'done' : ''}`}>
-                        <div className={`step-circle ${resesPesoFrio > 0 || isBoning ? 'done' : ''}`}>
-                            <Scale size={24} />
-                        </div>
-                        <span className="step-label">Peso Frío</span>
-                        <span className="step-count">{resesPesoFrio}</span>
-                    </div>
-
-                    <div className={`flow-step ${isBoning ? 'active' : 'disabled'} ${resesDesguazadas > 0 ? 'done' : ''}`}>
-                        <div className={`step-circle ${resesDesguazadas > 0 ? 'done' : ''}`}>
+                    <div className={`flow-step ${isCorte ? 'active' : 'disabled'} ${resesCorte > 0 ? 'done' : ''}`}>
+                        <div className={`step-circle ${resesCorte > 0 ? 'done' : ''}`}>
                             <Scissors size={24} />
                         </div>
-                        <span className="step-label">Deshuese</span>
-                        <span className="step-count">{resesDesguazadas}</span>
+                        <span className="step-label">Corte</span>
+                        <span className="step-count">{resesCorte}</span>
                     </div>
                 </div>
 
                 <div className="progress-bars-container">
                     <div className="progress-group">
                         <div className="progress-label">
-                            <span>Peso Caliente</span>
+                            <span>Pesaje Materia Prima</span>
                             <span>{isHot ? resesProcesadasCaliente : ticket.reses.length}/{ticket.reses.length}</span>
                         </div>
                         <div className="progress-track">
@@ -152,13 +136,13 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
 
                     <div className="progress-group">
                         <div className="progress-label">
-                            <span>Peso Frío / Desguace</span>
-                            <span>{resesPesoFrio}/{ticket.reses.length}</span>
+                            <span>Procesadas en Corte</span>
+                            <span>{resesCorte}/{ticket.reses.length}</span>
                         </div>
                         <div className="progress-track">
                             <div
                                 className="progress-fill cut"
-                                style={{ width: `${((resesPesoFrio + resesDesguazadas) / ticket.reses.length) * 100}%` }}
+                                style={{ width: `${(resesCorte / ticket.reses.length) * 100}%` }}
                             ></div>
                         </div>
                     </div>
@@ -180,14 +164,14 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
             </div>
 
             <div className="main-work-grid">
-                {resActual && !isBoning && (
+                {resActual && !isCorte && (
                     <ScaleReal
-                        title={isHot ? "Peso Caliente" : "Peso Frío"}
-                        icon={isHot ? <Flame size={20} className="icon-hot" /> : <Snowflake size={20} className="icon-cold" />}
+                        title="Recepción de Materia Prima"
+                        icon={<Scale size={20} className="icon-hot" />}
                         resNumber={resActual.numero}
                         onCapture={onCapture}
-                        variant={isHot ? 'hot' : 'cold'}
-                        disabled={!isHot && resActual.estado !== 'congelador'}
+                        variant="hot"
+                        disabled={false}
                     />
                 )}
 
@@ -200,7 +184,7 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                         {ticket.reses
                             .filter(res => {
                                 if (isHot) {
-                                    return res.peso === null || res.estado === 'pesado_caliente';
+                                    return res.peso === null || res.estado === 'congelador';
                                 }
                                 return true;
                             })
@@ -209,7 +193,7 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                                     <div className="res-id-box">#{res.numero}</div>
                                     <div className="res-data">
                                         <h4>Res #{res.numero}</h4>
-                                        <p>{res.peso !== null ? `${res.peso} kg registrados (${isHot ? 'Caliente' : 'Frío'})` : 'Pendiente de pesaje'}</p>
+                                        <p>{res.peso !== null ? `${res.peso} kg registrados` : 'Pendiente de pesaje'}</p>
                                     </div>
                                     {res.peso !== null && res.estado !== 'congelador' && isHot && (
                                         <button
@@ -220,11 +204,11 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                                             <Snowflake size={18} />
                                         </button>
                                     )}
-                                    {!isHot && !isBoning && res.estado === 'pesado_frio' && (
+                                    {!isHot && !isCorte && res.estado === 'congelador' && (
                                         <button
                                             className="btn-freeze-action"
                                             style={{ background: '#7c3aed', color: '#fff', border: 'none' }}
-                                            title="Enviar a Deshuese"
+                                            title="Enviar a Corte"
                                             onClick={() => onBone(res.id)}
                                         >
                                             <Scissors size={18} />
@@ -232,8 +216,7 @@ export const WorkstationScaleView = ({ type, ticket, currentResIndex, onBack, on
                                     )}
                                     {res.estado === 'congelador' && <Snowflake size={20} className="status-frozen" />}
                                     {(res.estado === 'desguazado' || res.estado === 'completado') && <Scissors size={22} className="check-done" style={{ color: '#7c3aed' }} />}
-                                    {res.peso !== null && res.estado !== 'congelador' && res.estado !== 'pesado_frio' && res.estado !== 'desguazado' && <CheckCircle size={20} className="check-done" />}
-                                    {res.estado === 'pesado_frio' && <CheckCircle size={20} className="check-done" style={{ color: '#3182ce' }} />}
+                                    {res.peso !== null && res.estado !== 'congelador' && res.estado !== 'desguazado' && res.estado !== 'completado' && <CheckCircle size={20} className="check-done" />}
                                 </div>
                             ))}
                     </div>

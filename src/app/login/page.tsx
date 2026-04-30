@@ -43,13 +43,10 @@ export default function LoginPage() {
                 router.push('/');
                 break;
             case 'pesador_caliente':
-                router.push('/heavy_hot');
-                break;
-            case 'pesador_frio':
-                router.push('/heavy_cold');
+                router.push('/recepcion');
                 break;
             case 'deshuesador':
-                router.push('/boner');
+                router.push('/corte_items');
                 break;
             case 'registrador':
                 router.push('/order');

@@ -30,6 +30,10 @@ export default function Order() {
         placa: '',
         chofer: '',
         temperatura: '',
+        temp_termoking: '',
+        condicion_vehiculo: 'Bien',
+        condicion_cestas: 'Bien',
+        observaciones: '',
         cantidad_res: '',
         sexo: 'Mixto',
         clasificacion: 'Premium',
@@ -112,6 +116,7 @@ export default function Order() {
                 body: JSON.stringify({
                     ...formData,
                     temperatura: parseFloat(formData.temperatura),
+                    temp_termoking: parseFloat(formData.temp_termoking || '0'),
                     cantidad_res: parseInt(formData.cantidad_res)
                 })
             });
@@ -125,6 +130,10 @@ export default function Order() {
                 placa: '',
                 chofer: '',
                 temperatura: '',
+                temp_termoking: '',
+                condicion_vehiculo: 'Bien',
+                condicion_cestas: 'Bien',
+                observaciones: '',
                 cantidad_res: '',
                 sexo: 'Mixto',
                 clasificacion: 'Premium',
@@ -258,15 +267,34 @@ export default function Order() {
                                         />
                                     </div>
                                     <div className="fieldGroup">
-                                        <label>Temp (°C)</label>
+                                        <label>Temp Termoking (°C)</label>
                                         <input
                                             type="number"
                                             step="0.1"
-                                            placeholder="4.0"
-                                            value={formData.temperatura}
-                                            onChange={(e) => setFormData({ ...formData, temperatura: e.target.value })}
-                                            required
+                                            placeholder="2.0"
+                                            value={formData.temp_termoking}
+                                            onChange={(e) => setFormData({ ...formData, temp_termoking: e.target.value })}
                                         />
+                                    </div>
+                                    <div className="fieldGroup">
+                                        <label>Condición Vehículo</label>
+                                        <select
+                                            value={formData.condicion_vehiculo}
+                                            onChange={(e) => setFormData({ ...formData, condicion_vehiculo: e.target.value })}
+                                        >
+                                            <option value="Bien">Bien</option>
+                                            <option value="Mal">Mal</option>
+                                        </select>
+                                    </div>
+                                    <div className="fieldGroup">
+                                        <label>Condición Cestas</label>
+                                        <select
+                                            value={formData.condicion_cestas}
+                                            onChange={(e) => setFormData({ ...formData, condicion_cestas: e.target.value })}
+                                        >
+                                            <option value="Bien">Bien</option>
+                                            <option value="Mal">Mal</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -314,6 +342,15 @@ export default function Order() {
                                             value={formData.fecha_matanza}
                                             onChange={(e) => setFormData({ ...formData, fecha_matanza: e.target.value })}
                                             required
+                                        />
+                                    </div>
+                                    <div className="fieldGroup" style={{ gridColumn: 'span 2' }}>
+                                        <label>Observaciones de Recepción</label>
+                                        <textarea
+                                            placeholder="Ingrese observaciones sobre el estado de la carga o el ganado..."
+                                            value={formData.observaciones}
+                                            onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
+                                            style={{ width: '100%', minHeight: '60px', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}
                                         />
                                     </div>
                                 </div>
@@ -411,12 +448,12 @@ export default function Order() {
 
                                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', padding: '15px', background: '#f8fafc', borderRadius: '12px' }}>
                                                     <div>
-                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Cortes</span>
-                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#641B2E' }}>{res.cortes_count || 0} pzs</span>
+                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Tipo</span>
+                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#641B2E' }}>{res.tipo_res || 'N/A'}</span>
                                                     </div>
                                                     <div>
-                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Cal.</span>
-                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#334155' }}>{res.peso_caliente}kg</span>
+                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Rom.</span>
+                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#334155' }}>{res.peso_romana}kg</span>
                                                     </div>
                                                 </div>
                                                 <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '0.85rem', color: '#641B2E', fontWeight: '600' }}>
@@ -441,21 +478,21 @@ export default function Order() {
                                 <div style={{ width: '80px', height: '80px', background: '#fef2f2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', margin: '0 auto 15px' }}>🐄</div>
                                 <h2 style={{ fontFamily: 'serif', fontSize: '2rem', margin: '0' }}>Res #{selectedRes.numero}</h2>
                                 <p style={{ color: '#64748b' }}>Información detallada del procesamiento</p>
-                            </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '40px' }}>
+                                    <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
+                                        <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Romana</span>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_romana} kg</span>
+                                    </div>
+                                    <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
+                                        <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Ticket</span>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_ticket ? `${selectedRes.peso_ticket} kg` : '—'}</span>
+                                    </div>
+                                    <div style={{ padding: '15px', background: '#641B2E', borderRadius: '16px', textAlign: 'center' }}>
+                                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: '700', textTransform: 'uppercase' }}>Diferencia</span>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#fff' }}>{selectedRes.peso_ticket ? `${(parseFloat(selectedRes.peso_romana) - parseFloat(selectedRes.peso_ticket)).toFixed(2)} kg` : '—'}</span>
+                                    </div>
+                                </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '40px' }}>
-                                <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
-                                    <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Caliente</span>
-                                    <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_caliente} kg</span>
-                                </div>
-                                <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
-                                    <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Frío</span>
-                                    <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_frio ? `${selectedRes.peso_frio} kg` : '—'}</span>
-                                </div>
-                                <div style={{ padding: '15px', background: '#641B2E', borderRadius: '16px', textAlign: 'center' }}>
-                                    <span style={{ display: 'block', fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: '700', textTransform: 'uppercase' }}>Merma</span>
-                                    <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#fff' }}>{selectedRes.merma_porcentaje ? `${parseFloat(selectedRes.merma_porcentaje).toFixed(2)}%` : '—'}</span>
-                                </div>
                             </div>
 
                             <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#334155', borderBottom: '2px solid #f1f5f9', paddingBottom: '10px', marginBottom: '20px' }}>
