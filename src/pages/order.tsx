@@ -377,88 +377,108 @@ export default function Order() {
                 {/* MODAL: DETALLE ORDEN */}
                 {ticketDetalle && (
                     <div className="overlay">
-                        <div className="modal" style={{ maxWidth: '950px', padding: '0', display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ padding: '40px', borderBottom: '1px solid #f1f5f9' }}>
-                                <button className="closeBtn" onClick={() => setTicketDetalle(null)}>&times;</button>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <div>
-                                        <h2 style={{ fontFamily: 'serif', fontSize: '2.4rem', color: '#1a1a1a', margin: '0' }}>Orden #{ticketDetalle.id}</h2>
-                                        <p style={{ color: '#64748b', fontSize: '1.1rem', marginTop: '5px' }}>Detalles de recepción y procesamiento</p>
-                                    </div>
-                                    <span className={`badge ${ticketDetalle.estado}`} style={{ fontSize: '1rem', padding: '8px 20px' }}>
-                                        {ticketDetalle.estado.replace('_', ' ').toUpperCase()}
-                                    </span>
-                                </div>
+                        <div className="modal order-detail-modal">
+                            <button className="closeBtn" onClick={() => setTicketDetalle(null)}>&times;</button>
 
-                                <div className="detailHeaderInfo" style={{ marginTop: '30px', background: '#fff', border: '1px solid #e2e8f0', boxShadow: 'none' }}>
-                                    <div className="fieldGroup">
-                                        <label>Proveedor</label>
-                                        <span style={{ fontWeight: '600', color: '#1e293b' }}>{proveedores.find(p => p.id === ticketDetalle.proveedor_id)?.nombre || '...'}</span>
-                                    </div>
-                                    <div className="fieldGroup">
-                                        <label>Placa Camión</label>
-                                        <span style={{ fontWeight: '600', color: '#1e293b' }}>{ticketDetalle.placa}</span>
-                                    </div>
-                                    <div className="fieldGroup">
-                                        <label>Total de Reses</label>
-                                        <span style={{ fontWeight: '600', color: '#1e293b' }}>{ticketDetalle.cantidad_res}</span>
-                                    </div>
-                                    <div className="fieldGroup">
-                                        <label>Chofer</label>
-                                        <span style={{ fontWeight: '600', color: '#1e293b' }}>{ticketDetalle.chofer}</span>
-                                    </div>
+                            {/* Header */}
+                            <div className="odm-header">
+                                <div className="odm-title-block">
+                                    <span className="odm-orden-label">Orden de Compra</span>
+                                    <h2 className="odm-title">#{ticketDetalle.id}</h2>
+                                    <p className="odm-subtitle">Detalles de recepción y procesamiento</p>
+                                </div>
+                                <span className={`badge ${ticketDetalle.estado} odm-status-badge`}>
+                                    {ticketDetalle.estado.replace('_', ' ').toUpperCase()}
+                                </span>
+                            </div>
+
+                            {/* Info chips */}
+                            <div className="odm-info-grid">
+                                <div className="odm-info-chip">
+                                    <label>Proveedor</label>
+                                    <span>{proveedores.find(p => p.id === ticketDetalle.proveedor_id)?.nombre || '—'}</span>
+                                </div>
+                                <div className="odm-info-chip">
+                                    <label>Placa Camión</label>
+                                    <span>{ticketDetalle.placa}</span>
+                                </div>
+                                <div className="odm-info-chip">
+                                    <label>Total Reses</label>
+                                    <span>{ticketDetalle.cantidad_res}</span>
+                                </div>
+                                <div className="odm-info-chip">
+                                    <label>Chofer</label>
+                                    <span>{ticketDetalle.chofer}</span>
                                 </div>
                             </div>
 
-                            <div style={{ padding: '40px', background: '#fcfcfc', flex: '1', overflowY: 'auto' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
-                                    <h3 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#334155', margin: '0' }}>Reses en Proceso</h3>
-                                    <div style={{ background: '#641B2E', color: '#fff', padding: '4px 12px', borderRadius: '20px', fontSize: '0.85rem' }}>
-                                        {carcasses.length} / {ticketDetalle.cantidad_res} Completadas
+                            {/* Reses section */}
+                            <div className="odm-section">
+                                <div className="odm-section-header">
+                                    <h3>Reses en Proceso</h3>
+                                    <div className="odm-count-pill">
+                                        {carcasses.length} / {ticketDetalle.cantidad_res} procesadas
                                     </div>
                                 </div>
 
-                                <div style={{ width: '100%', height: '14px', background: '#e2e8f0', borderRadius: '7px', overflow: 'hidden', marginBottom: '40px' }}>
-                                    <div style={{ width: `${(carcasses.length / ticketDetalle.cantidad_res) * 100}%`, height: '100%', background: '#641B2E', transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)' }}></div>
+                                {/* Progress bar */}
+                                <div className="odm-progress-track">
+                                    <div
+                                        className="odm-progress-fill"
+                                        style={{ width: `${(carcasses.length / ticketDetalle.cantidad_res) * 100}%` }}
+                                    />
                                 </div>
 
                                 {loadingCarcasses ? (
-                                    <div style={{ textAlign: 'center', padding: '40px' }}>
+                                    <div className="odm-loading">
                                         <Loader2 className="animate-spin" size={32} color="#641B2E" />
                                     </div>
                                 ) : carcasses.length === 0 ? (
-                                    <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', border: '1px dashed #cbd5e1', borderRadius: '20px' }}>
-                                        <div style={{ fontSize: '3rem', marginBottom: '15px' }}>⏳</div>
-                                        <h4 style={{ color: '#475569', marginBottom: '5px' }}>No hay reses procesadas todavía</h4>
-                                        <p style={{ color: '#94a3b8' }}>Las reses aparecerán aquí una vez que pasen por el pesaje en caliente.</p>
+                                    <div className="odm-empty">
+                                        <div className="odm-empty-icon">⏳</div>
+                                        <h4>No hay reses procesadas todavía</h4>
+                                        <p>Las reses aparecerán aquí una vez que pasen por el pesaje en caliente.</p>
                                     </div>
                                 ) : (
-                                    <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                                    <div className="odm-res-grid">
                                         {carcasses.map((res: any) => (
-                                            <div key={res.id} className="resCard" onClick={(e) => { e.stopPropagation(); setSelectedRes(res); }} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '20px', padding: '20px', cursor: 'pointer', transition: 'all 0.2s ease', position: 'relative' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <div style={{ width: '40px', height: '40px', background: '#fef2f2', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🐄</div>
-                                                        <span style={{ fontWeight: '700', fontSize: '1.2rem', color: '#1e293b' }}>Res #{res.numero}</span>
-                                                    </div>
-                                                    <div style={{ fontSize: '0.75rem', fontWeight: '700', padding: '4px 10px', borderRadius: '12px', background: res.estado === 'completado' ? '#def7ec' : '#fef3c7', color: res.estado === 'completado' ? '#03543f' : '#92400e' }}>
-                                                        {res.estado.replace('_', ' ').toUpperCase()}
+                                            <div
+                                                key={res.id}
+                                                className="odm-res-card"
+                                                onClick={(e) => { e.stopPropagation(); setSelectedRes(res); }}
+                                            >
+                                                {/* Card header */}
+                                                <div className="odm-res-card-top">
+                                                    <div className="odm-res-avatar">🐄</div>
+                                                    <div className="odm-res-title">
+                                                        <strong>Res #{res.numero}</strong>
+                                                        <span className={`odm-res-badge ${res.estado}`}>
+                                                            {res.estado.replace('_', ' ').toUpperCase()}
+                                                        </span>
                                                     </div>
                                                 </div>
 
-                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', padding: '15px', background: '#f8fafc', borderRadius: '12px' }}>
-                                                    <div>
-                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Tipo</span>
-                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#641B2E' }}>{res.tipo_res || 'N/A'}</span>
+                                                {/* Stats */}
+                                                <div className="odm-res-stats">
+                                                    <div className="odm-res-stat">
+                                                        <label>Tipo</label>
+                                                        <span>{res.tipo_de_res || res.tipo_res || '—'}</span>
                                                     </div>
-                                                    <div>
-                                                        <span style={{ display: 'block', fontSize: '0.65rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Rom.</span>
-                                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: '#334155' }}>{res.peso_romana}kg</span>
+                                                    <div className="odm-res-stat">
+                                                        <label>Clasificación</label>
+                                                        <span>{res.clasificacion || '—'}</span>
+                                                    </div>
+                                                    <div className="odm-res-stat">
+                                                        <label>Peso Rom.</label>
+                                                        <span className="odm-res-weight">{res.peso_romana} kg</span>
+                                                    </div>
+                                                    <div className="odm-res-stat">
+                                                        <label>Sexo</label>
+                                                        <span>{res.sexo || '—'}</span>
                                                     </div>
                                                 </div>
-                                                <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '0.85rem', color: '#641B2E', fontWeight: '600' }}>
-                                                    Ver detalles &rarr;
-                                                </div>
+
+                                                <div className="odm-res-link">Ver detalles →</div>
                                             </div>
                                         ))}
                                     </div>
@@ -468,67 +488,88 @@ export default function Order() {
                     </div>
                 )}
 
-                {/* MODAL: DETALLE ESPECIFICO DE RES */}
+                {/* MODAL: DETALLE ESPECÍFICO DE RES */}
                 {selectedRes && (
                     <div className="overlay" style={{ zIndex: 1100 }}>
-                        <div className="modal" style={{ maxWidth: '600px', animation: 'fadeIn 0.3s ease-out' }}>
+                        <div className="modal res-detail-modal">
                             <button className="closeBtn" onClick={() => setSelectedRes(null)}>&times;</button>
 
-                            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                                <div style={{ width: '80px', height: '80px', background: '#fef2f2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', margin: '0 auto 15px' }}>🐄</div>
-                                <h2 style={{ fontFamily: 'serif', fontSize: '2rem', margin: '0' }}>Res #{selectedRes.numero}</h2>
-                                <p style={{ color: '#64748b' }}>Información detallada del procesamiento</p>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '40px' }}>
-                                    <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
-                                        <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Romana</span>
-                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_romana} kg</span>
-                                    </div>
-                                    <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '16px', textAlign: 'center' }}>
-                                        <span style={{ display: 'block', fontSize: '0.7rem', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase' }}>Peso Ticket</span>
-                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#334155' }}>{selectedRes.peso_ticket ? `${selectedRes.peso_ticket} kg` : '—'}</span>
-                                    </div>
-                                    <div style={{ padding: '15px', background: '#641B2E', borderRadius: '16px', textAlign: 'center' }}>
-                                        <span style={{ display: 'block', fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', fontWeight: '700', textTransform: 'uppercase' }}>Diferencia</span>
-                                        <span style={{ fontSize: '1.2rem', fontWeight: '700', color: '#fff' }}>{selectedRes.peso_ticket ? `${(parseFloat(selectedRes.peso_romana) - parseFloat(selectedRes.peso_ticket)).toFixed(2)} kg` : '—'}</span>
-                                    </div>
+                            {/* Res header */}
+                            <div className="rdm-header">
+                                <div className="rdm-avatar">🐄</div>
+                                <div className="rdm-title-block">
+                                    <h2>Res #{selectedRes.numero}</h2>
+                                    <span className={`badge ${selectedRes.estado}`}>
+                                        {selectedRes.estado.replace('_', ' ').toUpperCase()}
+                                    </span>
                                 </div>
-
                             </div>
 
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#334155', borderBottom: '2px solid #f1f5f9', paddingBottom: '10px', marginBottom: '20px' }}>
-                                Cortes Extraídos ({cortesRes.length})
-                            </h3>
+                            {/* Res stats */}
+                            <div className="rdm-stats">
+                                <div className="rdm-stat-card rdm-stat-primary">
+                                    <label>Tipo de Res</label>
+                                    <span>{selectedRes.tipo_de_res || selectedRes.tipo_res || '—'}</span>
+                                </div>
+                                <div className="rdm-stat-card">
+                                    <label>Sexo</label>
+                                    <span>{selectedRes.sexo || '—'}</span>
+                                </div>
+                                <div className="rdm-stat-card">
+                                    <label>Clasificación</label>
+                                    <span>{selectedRes.clasificacion || '—'}</span>
+                                </div>
+                                <div className="rdm-stat-card">
+                                    <label>Peso Romana</label>
+                                    <span>{selectedRes.peso_romana} kg</span>
+                                </div>
+                                <div className="rdm-stat-card">
+                                    <label>Peso Ticket</label>
+                                    <span>{selectedRes.peso_ticket ? `${selectedRes.peso_ticket} kg` : '—'}</span>
+                                </div>
+                                <div className="rdm-stat-card rdm-stat-dark">
+                                    <label>Diferencia</label>
+                                    <span>{selectedRes.peso_ticket
+                                        ? `${(parseFloat(selectedRes.peso_romana) - parseFloat(selectedRes.peso_ticket)).toFixed(2)} kg`
+                                        : '—'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Cortes section */}
+                            <div className="rdm-cortes-title">
+                                <h3>Ítems Extraídos</h3>
+                                <span className="rdm-cortes-count">{cortesRes.length}</span>
+                            </div>
 
                             {loadingCortes ? (
-                                <div style={{ textAlign: 'center', padding: '30px' }}>
+                                <div className="rdm-loading">
                                     <Loader2 className="animate-spin" size={24} color="#641B2E" />
                                 </div>
                             ) : cortesRes.length === 0 ? (
-                                <div style={{ textAlign: 'center', padding: '30px', color: '#94a3b8', background: '#f8fafc', borderRadius: '16px' }}>
-                                    No se han registrado cortes para esta res todavía.
+                                <div className="rdm-empty">
+                                    No se han registrado ítems para esta res todavía.
                                 </div>
                             ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '350px', overflowY: 'auto', paddingRight: '10px' }}>
+                                <div className="rdm-cortes-list">
                                     {cortesRes.map((c: any) => (
-                                        <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '16px' }}>
-                                            <div>
-                                                <div style={{ fontWeight: '700', color: '#1a1a1a' }}>{c.tipo_nombre}</div>
-                                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Categoría: {c.clasificacion}</div>
+                                        <div key={c.id} className="rdm-corte-item">
+                                            <div className="rdm-corte-icon">✂️</div>
+                                            <div className="rdm-corte-info">
+                                                <strong>{c.tipo_nombre}</strong>
+                                                <span>Categoría: {c.clasificacion} · {c.almacen || ''}</span>
                                             </div>
-                                            <div style={{ textAlign: 'right' }}>
-                                                <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#641B2E' }}>{parseFloat(c.peso).toFixed(2)} kg</div>
-                                                <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>ID #{c.id}</div>
+                                            <div className="rdm-corte-weight">
+                                                {parseFloat(c.peso).toFixed(2)} kg
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             )}
 
-                            <div style={{ marginTop: '30px' }}>
-                                <button onClick={() => setSelectedRes(null)} style={{ width: '100%', padding: '16px', background: '#f1f5f9', border: 'none', borderRadius: '12px', fontWeight: '700', color: '#475569', cursor: 'pointer' }}>
-                                    Cerrar Detalles
-                                </button>
-                            </div>
+                            <button className="rdm-close-btn" onClick={() => setSelectedRes(null)}>
+                                Cerrar Detalles
+                            </button>
                         </div>
                     </div>
                 )}
