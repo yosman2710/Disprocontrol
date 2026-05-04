@@ -75,23 +75,25 @@ export default function OperacionesPage() {
 
   return (
     <div className="op-screen">
-      {/* Indicador de Status y Logout arriba a la derecha */}
-      <div style={{ position: 'absolute', top: 20, right: 40, display: 'flex', alignItems: 'center', gap: '20px' }}>
-        <div style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '14px' }}>
-          ● SISTEMA ONLINE
+      {/* Elementos decorativos de fondo */}
+      <div className="bg-blob blob-1" />
+      <div className="bg-blob blob-2" />
+
+      {/* Indicador de Status y Logout */}
+      <div className="op-status-bar">
+        <div className="status-indicator">
+          <div className="status-dot" />
+          SISTEMA ONLINE
         </div>
-        <button
-          onClick={handleLogout}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#fef2f2', border: '1px solid #fee2e2', color: '#991b1b', padding: '8px 16px', borderRadius: '30px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', transition: 'all 0.2s ease' }}
-        >
-          <LogOut size={18} />
+        <button onClick={handleLogout} className="logout-btn">
+          <LogOut size={16} />
           Cerrar Sesión
         </button>
       </div>
 
       <header className="op-header">
         <div className="op-logo-box">
-          <Beef size={60} strokeWidth={2.5} color='white' />
+          <Beef size={50} strokeWidth={2.5} color='#f6b53b' />
         </div>
         <h1 className="op-title">Disprocontrol</h1>
         <p className="op-subtitle">Panel de Control de Operaciones</p>
@@ -105,7 +107,7 @@ export default function OperacionesPage() {
             className="op-card"
           >
             <div className={`op-icon-circle ${section.colorClass}`}>
-              <section.icon size={48} />
+              <section.icon size={40} />
             </div>
             <h2 className="op-card-title">{section.title}</h2>
             <p className="op-card-desc">{section.description}</p>

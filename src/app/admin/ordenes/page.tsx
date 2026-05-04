@@ -131,9 +131,17 @@ export default function OrdenesAdminPage() {
             await apiFetch(`/orden-compra/${editingOrder.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    ...editingOrder,
-                    temperatura: parseFloat(editingOrder.temperatura) || 0,
-                    cantidad_res: parseInt(editingOrder.cantidad_res) || 0
+                    placa:              editingOrder.placa,
+                    chofer:             editingOrder.chofer,
+                    proveedor_id:       editingOrder.proveedor_id,
+                    matadero_id:        editingOrder.matadero_id,
+                    temperatura:        editingOrder.temperatura,
+                    temp_termoking:     editingOrder.temp_termoking,
+                    condicion_vehiculo: editingOrder.condicion_vehiculo,
+                    condicion_cestas:   editingOrder.condicion_cestas,
+                    observaciones:      editingOrder.observaciones,
+                    fecha_matanza:      editingOrder.fecha_matanza,
+                    peso_promedio:      editingOrder.peso_promedio,
                 })
             });
             toast.success('Orden actualizada');
@@ -349,8 +357,14 @@ export default function OrdenesAdminPage() {
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
                                                 <div className="res-icon">#{res.numero}</div>
                                                 <div className="res-info">
-                                                    <span className="res-title">Res ID: {res.id}</span>
-                                                    <span className="res-meta">{res.peso_caliente}kg Calor | {res.peso_frio || '??'}kg Frío</span>
+                                                    <span className="res-title">
+                                                        {res.tipo_de_res || 'Sin tipo'} — Res #{res.numero}
+                                                    </span>
+                                                    <span className="res-meta">
+                                                        {res.peso_romana ? `${Number(res.peso_romana).toFixed(2)} kg romana` : 'Sin peso'}
+                                                        {res.sexo ? ` · ${res.sexo}` : ''}
+                                                        {res.clasificacion ? ` · ${res.clasificacion}` : ''}
+                                                    </span>
                                                 </div>
                                                 <span className={`badge ${res.estado}`} style={{ fontSize: '10px' }}>{res.estado}</span>
                                             </div>
@@ -395,49 +409,73 @@ export default function OrdenesAdminPage() {
                             <h3>Editar Orden #{editingOrder.id}</h3>
                         </div>
                         <div className="modal-body">
-                            <div className="input-group">
-                                <label>Proveedor</label>
-                                <select
-                                    className="modal-select"
-                                    value={editingOrder.proveedor_id || ''}
-                                    onChange={e => setEditingOrder({ ...editingOrder, proveedor_id: e.target.value })}
-                                >
-                                    <option value="">Seleccionar Proveedor</option>
-                                    {proveedores.map(p => (
-                                        <option key={p.id} value={p.id}>{p.nombre}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="input-group">
-                                <label>Matadero</label>
-                                <select
-                                    className="modal-select"
-                                    value={editingOrder.matadero_id || ''}
-                                    onChange={e => setEditingOrder({ ...editingOrder, matadero_id: e.target.value })}
-                                >
-                                    <option value="">Seleccionar Matadero</option>
-                                    {mataderos.map(m => (
-                                        <option key={m.id} value={m.id}>{m.nombre}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="input-group">
-                                <label>Chofer</label>
-                                <input type="text" value={editingOrder.chofer} onChange={e => setEditingOrder({ ...editingOrder, chofer: e.target.value })} />
-                            </div>
-                            <div className="input-group">
-                                <label>Placa</label>
-                                <input type="text" value={editingOrder.placa} onChange={e => setEditingOrder({ ...editingOrder, placa: e.target.value })} />
-                            </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                                 <div className="input-group">
-                                    <label>Temperatura</label>
-                                    <input type="number" step="0.1" value={editingOrder.temperatura} onChange={e => setEditingOrder({ ...editingOrder, temperatura: e.target.value })} />
+                                    <label>Proveedor</label>
+                                    <select className="modal-select" value={editingOrder.proveedor_id || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, proveedor_id: e.target.value })}>
+                                        <option value="">Seleccionar Proveedor</option>
+                                        {proveedores.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                                    </select>
                                 </div>
                                 <div className="input-group">
-                                    <label>Cant. Reses</label>
-                                    <input type="number" value={editingOrder.cantidad_res} onChange={e => setEditingOrder({ ...editingOrder, cantidad_res: e.target.value })} />
+                                    <label>Matadero</label>
+                                    <select className="modal-select" value={editingOrder.matadero_id || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, matadero_id: e.target.value })}>
+                                        <option value="">Seleccionar Matadero</option>
+                                        {mataderos.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
+                                    </select>
                                 </div>
+                                <div className="input-group">
+                                    <label>Chofer</label>
+                                    <input type="text" value={editingOrder.chofer || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, chofer: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Placa</label>
+                                    <input type="text" value={editingOrder.placa || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, placa: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Temp Carne (°C)</label>
+                                    <input type="number" step="0.1" value={editingOrder.temperatura || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, temperatura: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Temp Termoking (°C)</label>
+                                    <input type="number" step="0.1" value={editingOrder.temp_termoking || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, temp_termoking: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Peso Promedio Esperado (kg)</label>
+                                    <input type="number" step="0.1" value={editingOrder.peso_promedio || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, peso_promedio: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Fecha Matanza</label>
+                                    <input type="date" value={editingOrder.fecha_matanza?.split('T')[0] || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, fecha_matanza: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Condición Vehículo</label>
+                                    <select className="modal-select" value={editingOrder.condicion_vehiculo || 'Bien'}
+                                        onChange={e => setEditingOrder({ ...editingOrder, condicion_vehiculo: e.target.value })}>
+                                        <option>Bien</option><option>Mal</option>
+                                    </select>
+                                </div>
+                                <div className="input-group">
+                                    <label>Condición Cestas</label>
+                                    <select className="modal-select" value={editingOrder.condicion_cestas || 'Bien'}
+                                        onChange={e => setEditingOrder({ ...editingOrder, condicion_cestas: e.target.value })}>
+                                        <option>Bien</option><option>Mal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="input-group" style={{ marginTop: '8px' }}>
+                                <label>Observaciones</label>
+                                <textarea style={{ width: '100%', minHeight: '64px', padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '14px', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                                    value={editingOrder.observaciones || ''}
+                                    onChange={e => setEditingOrder({ ...editingOrder, observaciones: e.target.value })} />
                             </div>
                         </div>
                         <div className="modal-footer">
