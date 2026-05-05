@@ -100,11 +100,12 @@ export default function OperacionesPage() {
       </header>
 
       <main className="op-grid">
-        {sections.map((section) => (
+        {sections.map((section, index) => (
           <Link
             key={section.path}
             href={section.path}
             className="op-card"
+            style={{ animationDelay: `${0.2 + index * 0.1}s` }}
           >
             <div className={`op-icon-circle ${section.colorClass}`}>
               <section.icon size={40} />

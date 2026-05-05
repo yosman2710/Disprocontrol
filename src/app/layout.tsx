@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthGuard } from "@/components/AuthGuard";
+import { ClientWrapper } from "@/components/ClientWrapper";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -28,11 +29,13 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Toaster position="top-right" richColors />
-        <AuthGuard>
-          <div className="main-scale-wrapper">
-            {children}
-          </div>
-        </AuthGuard>
+        <ClientWrapper>
+          <AuthGuard>
+            <div className="main-scale-wrapper">
+              {children}
+            </div>
+          </AuthGuard>
+        </ClientWrapper>
       </body>
     </html>
   );

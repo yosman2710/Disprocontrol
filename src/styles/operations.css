@@ -126,6 +126,18 @@ html, body {
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     text-decoration: none;
     overflow: hidden;
+    animation: cardEntrance 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Shiny Effect */
