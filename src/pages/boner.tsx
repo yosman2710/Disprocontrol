@@ -270,7 +270,7 @@ export default function BonerPage() {
         >
             <div className="boner-container">
                 <WorkstationScaleView
-                    type="deshuesado"
+                    type="corte"
                     ticket={{
                         id: selectedOrder.id.toString(),
                         proveedor: selectedOrder.proveedor_nombre,
