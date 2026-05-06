@@ -323,8 +323,20 @@ export default function CorteItemsPage() {
                                 </div>
                             )}
 
-                            {/* Form — tipo + clasificación + almacén */}
+                            {/* Form — almacén (primero para evitar errores) + tipo + clasificación */}
                             <div className="ci-form-row">
+                                <div className="ci-field">
+                                    <label>Almacén de Destino</label>
+                                    <select
+                                        id="ci-almacen"
+                                        value={almacen}
+                                        onChange={e => setAlmacen(e.target.value)}
+                                        disabled={currentRes?.estado === 'completado'}
+                                        className="ci-select-highlight"
+                                    >
+                                        {almacenes.map(a => <option key={a} value={a}>{a}</option>)}
+                                    </select>
+                                </div>
                                 <div className="ci-field">
                                     <label>Tipo de Ítem</label>
                                     <select
@@ -348,17 +360,6 @@ export default function CorteItemsPage() {
                                         disabled={currentRes?.estado === 'completado'}
                                     >
                                         {['AA','A','B','C','D'].map(v => <option key={v}>{v}</option>)}
-                                    </select>
-                                </div>
-                                <div className="ci-field">
-                                    <label>Almacén</label>
-                                    <select
-                                        id="ci-almacen"
-                                        value={almacen}
-                                        onChange={e => setAlmacen(e.target.value)}
-                                        disabled={currentRes?.estado === 'completado'}
-                                    >
-                                        {almacenes.map(a => <option key={a}>{a}</option>)}
                                     </select>
                                 </div>
                             </div>

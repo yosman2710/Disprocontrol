@@ -51,14 +51,21 @@ export default function InventarioPage() {
         fetchInventario();
     }, []);
 
+    const [selectedAlmacen, setSelectedAlmacen] = useState<string>('Almacén 1');
+    const almacenes = ['Almacén 1', 'Almacén 2', 'Almacén 3', 'Almacén 4', 'Almacén 5'];
+
     const filteredInventario = inventario.filter(item => {
         const term = searchTerm.toLowerCase();
-        return (
+        const matchesSearch = (
             (item.codigo && item.codigo.toLowerCase().includes(term)) ||
-            (item.tipo_corte && item.tipo_corte.toLowerCase().includes(term)) ||
-            (item.ubicacion && item.ubicacion.toLowerCase().includes(term))
+            (item.tipo_corte && item.tipo_corte.toLowerCase().includes(term))
         );
+        const matchesAlmacen = item.ubicacion === selectedAlmacen;
+        return matchesSearch && matchesAlmacen;
     });
+
+    const totalKilosAlmacen = filteredInventario.reduce((sum, item) => sum + Number(item.peso_total), 0);
+    const totalItemsAlmacen = filteredInventario.reduce((sum, item) => sum + item.cantidad, 0);
 
     const handleRowClick = async (item: InventarioItem) => {
         setSelectedItem(item);
@@ -67,7 +74,9 @@ export default function InventarioPage() {
         try {
             const result = await apiFetch(`/stocks/${item.codigo}/detalles`);
             if (result.success && Array.isArray(result.data)) {
-                setDetalles(result.data);
+                // Filtrar detalles por el almacén actual por si acaso hay duplicados de código en otros almacenes
+                const detallesFiltrados = result.data.filter((d: any) => d.almacen === selectedAlmacen);
+                setDetalles(detallesFiltrados);
             }
         } catch (error) {
             console.error("Error fetching detalles:", error);
@@ -90,7 +99,7 @@ export default function InventarioPage() {
             <div className={styles['inventario-header-card']}>
                 <div className={styles['inventario-header-titles']}>
                     <h1>Inventario Central</h1>
-                    <p>Consulta y filtrado de cortes almacenados</p>
+                    <p>Gestión de existencias por almacén</p>
                 </div>
 
                 <div className={styles['inventario-controls']}>
@@ -98,7 +107,7 @@ export default function InventarioPage() {
                         <Search size={18} className={styles['search-icon']} />
                         <input
                             type="text"
-                            placeholder="Buscar por código, corte o ubicación..."
+                            placeholder="Buscar por código o corte..."
                             className={styles['search-input']}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -107,14 +116,45 @@ export default function InventarioPage() {
                 </div>
             </div>
 
+            {/* Warehouse Selector */}
+            <div className={styles['almacen-selector']}>
+                {almacenes.map((almacen) => (
+                    <button
+                        key={almacen}
+                        className={`${styles['almacen-tab']} ${selectedAlmacen === almacen ? styles['active'] : ''}`}
+                        onClick={() => setSelectedAlmacen(almacen)}
+                    >
+                        <Box size={20} />
+                        <div className={styles['almacen-tab-info']}>
+                            <span className={styles['almacen-name']}>{almacen}</span>
+                            <span className={styles['almacen-stats']}>
+                                {inventario.filter(i => i.ubicacion === almacen).reduce((sum, i) => sum + Number(i.peso_total), 0).toFixed(1)} kg
+                            </span>
+                        </div>
+                    </button>
+                ))}
+            </div>
+
             <div className={styles['inventario-list-wrapper']}>
+                {!loading && filteredInventario.length > 0 && (
+                    <div className={styles['list-summary-bar']}>
+                        <div className={styles['summary-item']}>
+                            <span className={styles['summary-label']}>Total Ítems:</span>
+                            <span className={styles['summary-value']}>{totalItemsAlmacen} ub(s)</span>
+                        </div>
+                        <div className={styles['summary-item']}>
+                            <span className={styles['summary-label']}>Peso Total en {selectedAlmacen}:</span>
+                            <span className={styles['summary-value-highlight']}>{totalKilosAlmacen.toFixed(2)} kg</span>
+                        </div>
+                    </div>
+                )}
+
                 {!loading && filteredInventario.length > 0 && (
                     <div className={styles['list-headers']}>
                         <div>Código</div>
                         <div>Corte Extraído</div>
                         <div>Cantidad</div>
                         <div>Peso Total</div>
-                        <div>Ubicación</div>
                         <div>Fecha Ingreso</div>
                     </div>
                 )}
@@ -127,8 +167,8 @@ export default function InventarioPage() {
                 ) : filteredInventario.length === 0 ? (
                     <div className={styles['inventario-empty']}>
                         <PackageOpen size={64} className={styles['empty-icon']} />
-                        <h2>No hay coincidencias</h2>
-                        <p>No se encontraron cortes que coincidan con "{searchTerm}"</p>
+                        <h2>Sin existencias</h2>
+                        <p>No hay cortes registrados en {selectedAlmacen} {searchTerm ? ` que coincidan con "${searchTerm}"` : ''}</p>
                     </div>
                 ) : (
                     <div className={styles['inventario-list']}>
@@ -156,11 +196,6 @@ export default function InventarioPage() {
                                 <div className={styles['peso-value']}>
                                     <span className={styles['column-label']}>Peso:</span>
                                     {Number(item.peso_total).toFixed(2)} <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>kg</span>
-                                </div>
-                                <div>
-                                    <span className={styles['ubicacion-badge']}>
-                                        {item.ubicacion || 'ALMACÉN'}
-                                    </span>
                                 </div>
                                 <div className={styles['fecha-text']}>
                                     {new Date(item.fecha_ingreso).toLocaleString('es-VE', {
