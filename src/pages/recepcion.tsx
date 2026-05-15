@@ -159,6 +159,10 @@ export default function RecepcionPage() {
                                 <label>Total Reses</label>
                                 <span>{selectedOrder.cantidad_res}</span>
                             </div>
+                            <div className="ws-meta-item">
+                                <label>Peso Matadero</label>
+                                <span>{Number(selectedOrder.peso_total_matadero || 0).toFixed(2)} kg</span>
+                            </div>
                         </div>
 
                         <div className="ws-progress-wrap">

@@ -45,6 +45,7 @@ export default function Order() {
         condicion_cestas: 'Bien',
         observaciones: '',
         peso_promedio: '',
+        peso_total_matadero: '',
         fecha_matanza: new Date().toISOString().split('T')[0]
     });
 
@@ -149,6 +150,7 @@ export default function Order() {
                     temperatura: parseFloat(formData.temperatura || '0'),
                     temp_termoking: parseFloat(formData.temp_termoking || '0'),
                     peso_promedio: parseFloat(formData.peso_promedio || '0'),
+                    peso_total_matadero: parseFloat(formData.peso_total_matadero || '0'),
                     cantidad_res: totalReses,
                     lote
                 })
@@ -161,6 +163,7 @@ export default function Order() {
                 proveedor_id: '', matadero_id: '', placa: '', chofer: '',
                 temperatura: '', temp_termoking: '', condicion_vehiculo: 'Bien',
                 condicion_cestas: 'Bien', observaciones: '', peso_promedio: '',
+                peso_total_matadero: '',
                 fecha_matanza: new Date().toISOString().split('T')[0]
             });
         } catch (error: any) {
@@ -348,6 +351,10 @@ export default function Order() {
                                         <label>Peso Promedio Esperado (kg)</label>
                                         <input type="number" step="0.1" placeholder="Ej: 220" value={formData.peso_promedio} onChange={e => setFormData({...formData, peso_promedio: e.target.value})} />
                                     </div>
+                                    <div className="fieldGroup">
+                                        <label>Peso Total Matadero (kg)</label>
+                                        <input type="number" step="0.1" placeholder="Ej: 4500" value={formData.peso_total_matadero} onChange={e => setFormData({...formData, peso_total_matadero: e.target.value})} required />
+                                    </div>
                                 </div>
 
                                 <div className="fieldGroup" style={{ marginTop: '12px' }}>
@@ -408,6 +415,14 @@ export default function Order() {
                                 <div className="odm-info-chip">
                                     <label>Chofer</label>
                                     <span>{ticketDetalle.chofer}</span>
+                                </div>
+                                <div className="odm-info-chip" style={{ background: 'rgba(100, 27, 46, 0.05)', border: '1px solid rgba(100, 27, 46, 0.1)' }}>
+                                    <label style={{ color: '#641B2E' }}>Peso Matadero</label>
+                                    <span style={{ fontWeight: 800, color: '#641B2E' }}>{Number(ticketDetalle.peso_total_matadero || 0).toFixed(2)} kg</span>
+                                </div>
+                                <div className="odm-info-chip" style={{ background: 'rgba(22, 101, 52, 0.05)', border: '1px solid rgba(22, 101, 52, 0.1)' }}>
+                                    <label style={{ color: '#166534' }}>Peso Planta (Romana)</label>
+                                    <span style={{ fontWeight: 800, color: '#166534' }}>{carcasses.reduce((sum, r) => sum + (Number(r.peso_romana) || 0), 0).toFixed(2)} kg</span>
                                 </div>
                             </div>
 

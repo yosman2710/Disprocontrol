@@ -313,63 +313,46 @@ function Proveedores() {
                                 {!loadingOrdenes && ordenes.length > 0 && (
                                     <div className={styles.movimientosList}>
                                         {/* Header de la tabla */}
-                                        <div style={{
-                                            display: 'grid',
-                                            gridTemplateColumns: '60px 90px 70px 110px 110px 90px 100px',
-                                            gap: '8px',
-                                            padding: '8px 12px',
-                                            borderBottom: '1px solid rgba(255,255,255,0.08)',
-                                            fontSize: '11px',
-                                            fontWeight: 600,
-                                            textTransform: 'uppercase',
-                                            color: '#888',
-                                            letterSpacing: '0.05em',
-                                        }}>
+                                        <div className={styles.tableHeader}>
                                             <span># Orden</span>
                                             <span>Fecha</span>
-                                            <span>Reses</span>
-                                            <span>Kg Caliente</span>
-                                            <span>Merma Total</span>
-                                            <span>Merma %</span>
-                                            <span>Estado</span>
+                                            <span style={{ textAlign: 'right' }}>Reses</span>
+                                            <span style={{ textAlign: 'right' }}>Kg Caliente</span>
+                                            <span style={{ textAlign: 'right' }}>Merma Total</span>
+                                            <span style={{ textAlign: 'right' }}>Merma %</span>
+                                            <span style={{ textAlign: 'center' }}>Estado</span>
                                         </div>
 
                                         {ordenes.map(orden => {
                                             const { label, color } = estadoLabel(orden.estado);
                                             return (
-                                                <div key={orden.id} style={{
-                                                    display: 'grid',
-                                                    gridTemplateColumns: '60px 90px 70px 110px 110px 90px 100px',
-                                                    gap: '8px',
-                                                    padding: '10px 12px',
-                                                    borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                                    fontSize: '13px',
-                                                    alignItems: 'center',
-                                                    transition: 'background 0.15s',
-                                                }}>
-                                                    <span style={{ fontWeight: 600, color: '#a78bfa' }}>#{orden.id}</span>
-                                                    <span style={{ color: '#54585eff' }}>{new Date(orden.fecha).toLocaleDateString('es-VE')}</span>
-                                                    <span style={{ color: '#54585eff    ', textAlign: 'right' }}>{orden.cantidad_res}</span>
-                                                    <span style={{ color: '#38bdf8', textAlign: 'right', fontWeight: 600 }}>
-                                                        {Number(orden.peso_total_caliente).toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg
+                                                <div key={orden.id} className={styles.tableRow}>
+                                                    <span className={styles.orderNumber}>#{orden.id}</span>
+                                                    <span className={styles.orderDate}>{new Date(orden.fecha).toLocaleDateString('es-VE')}</span>
+                                                    <span className={styles.orderReses}>{orden.cantidad_res}</span>
+                                                    <span className={styles.orderWeight}>
+                                                        {Number(orden.peso_total_caliente || 0).toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg
                                                     </span>
-                                                    <span style={{ color: '#fb923c', textAlign: 'right' }}>
-                                                        {Number(orden.merma_total_kg).toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg
+                                                    <span className={styles.orderMermaKg}>
+                                                        {Number(orden.merma_total_kg || 0).toLocaleString('es-VE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} kg
                                                     </span>
-                                                    <span style={{ color: '#fb923c', textAlign: 'right' }}>
-                                                        {Number(orden.merma_total_porcentaje).toFixed(1)}%
+                                                    <span className={styles.orderMermaPct}>
+                                                        {Number(orden.merma_total_porcentaje || 0).toFixed(1)}%
                                                     </span>
-                                                    <span style={{
-                                                        display: 'inline-block',
-                                                        padding: '2px 10px',
-                                                        borderRadius: '20px',
-                                                        fontSize: '11px',
-                                                        fontWeight: 600,
-                                                        background: `${color}22`,
-                                                        color: color,
-                                                        border: `1px solid ${color}44`,
-                                                        textAlign: 'center'
-                                                    }}>{label}</span>
+                                                    <div className={styles.statusWrapper}>
+                                                        <span style={{
+                                                            display: 'inline-block',
+                                                            padding: '2px 10px',
+                                                            borderRadius: '20px',
+                                                            fontSize: '11px',
+                                                            fontWeight: 600,
+                                                            background: `${color}22`,
+                                                            color: color,
+                                                            border: `1px solid ${color}44`,
+                                                            textAlign: 'center',
+                                                            width: '100%'
+                                                        }}>{label}</span>
+                                                    </div>
                                                 </div>
                                             );
                                         })}

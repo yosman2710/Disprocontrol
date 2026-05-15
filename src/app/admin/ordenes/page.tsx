@@ -142,6 +142,7 @@ export default function OrdenesAdminPage() {
                     observaciones:      editingOrder.observaciones,
                     fecha_matanza:      editingOrder.fecha_matanza,
                     peso_promedio:      editingOrder.peso_promedio,
+                    peso_total_matadero: editingOrder.peso_total_matadero,
                 })
             });
             toast.success('Orden actualizada');
@@ -450,6 +451,11 @@ export default function OrdenesAdminPage() {
                                     <label>Peso Promedio Esperado (kg)</label>
                                     <input type="number" step="0.1" value={editingOrder.peso_promedio || ''}
                                         onChange={e => setEditingOrder({ ...editingOrder, peso_promedio: e.target.value })} />
+                                </div>
+                                <div className="input-group">
+                                    <label>Peso Total Matadero (kg)</label>
+                                    <input type="number" step="0.1" value={editingOrder.peso_total_matadero || ''}
+                                        onChange={e => setEditingOrder({ ...editingOrder, peso_total_matadero: e.target.value })} />
                                 </div>
                                 <div className="input-group">
                                     <label>Fecha Matanza</label>
