@@ -1,11 +1,11 @@
 /* Chatbot.module.css */
 :root {
-    --primary: #9d174d;
+    --primary: #2563eb;
     --primary-foreground: #ffffff;
-    --muted: #ffe2ed;
-    --muted-foreground: #64748b;
+    --muted: #e0f2fe;
+    --muted-foreground: #475569;
     --foreground: #0f172a;
-    --border: #ffe2ed;
+    --border: #bfdbfe;
     --success: #10b981;
     --accent: #f59e0b;
     --card: #ffffff;
@@ -18,12 +18,13 @@
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    background: linear-gradient(135deg, #9d174d 0%, #ffe2ed 100%);
-    min-height: 100vh;
+.chatbot-page-wrapper {
+    width: 100%;
+    min-height: calc(100vh / 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2563eb 0%, #dbeafe 100%);
 }
 
 .chatContainer {

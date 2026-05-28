@@ -8,17 +8,17 @@
 
 /* ── TOKENS ── */
 :root {
-    --ci-purple:        #7c3aed;
-    --ci-purple-hover:  #6d28d9;
-    --ci-purple-light:  #ddd6fe;
-    --ci-purple-soft:   #f5f3ff;
-    --ci-purple-border: #c4b5fd;
+    --ci-purple:        #2563eb;
+    --ci-purple-hover:  #1d4ed8;
+    --ci-purple-light:  #93c5fd;
+    --ci-purple-soft:   #f0f7ff;
+    --ci-purple-border: #bfdbfe;
     --ci-green:         #16a34a;
     --ci-green-dim:     rgba(22,163,74,0.1);
-    --ci-amber:         #d97706;
-    --ci-text:          #1a202c;
-    --ci-muted:         #718096;
-    --ci-bg:            #f5f3ff;
+    --ci-amber:         #0284c7;
+    --ci-text:          #0f172a;
+    --ci-muted:         #475569;
+    --ci-bg:            transparent;
     --ci-white:         #ffffff;
     --ci-border:        #e2e8f0;
 }
@@ -44,7 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(124,58,237,0.35);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
 }
 
 .ci-top-nav h1 {
@@ -110,7 +110,7 @@
 
 .ci-search-input:focus {
     border-color: var(--ci-purple);
-    box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
 }
 
 .ci-loading,
@@ -161,7 +161,7 @@
 
 .ci-order-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(124,58,237,0.14);
+    box-shadow: 0 12px 24px rgba(37,99,235,0.12);
 }
 
 .ci-card-top {
@@ -247,7 +247,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    box-shadow: 0 2px 8px rgba(124,58,237,0.35);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
     flex-shrink: 0;
 }
 
@@ -381,7 +381,7 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
-    box-shadow: 0 2px 8px rgba(124,58,237,0.06);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.06);
 }
 
 /* Res number row — cuadros 30×30 clickeables */
@@ -442,7 +442,7 @@
     background: var(--ci-purple);
     border-color: var(--ci-purple);
     color: white;
-    box-shadow: 0 2px 8px rgba(124,58,237,0.35);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
 }
 
 .ci-res-num.done {
@@ -515,7 +515,7 @@
 
 .ci-field select:focus {
     border-color: var(--ci-purple);
-    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
 
 .ci-field select:disabled {
@@ -545,7 +545,7 @@
     height: 9px;
     border-radius: 50%;
     background: var(--ci-purple);
-    box-shadow: 0 0 6px rgba(124,58,237,0.5);
+    box-shadow: 0 0 6px rgba(37,99,235,0.4);
     animation: ciDotPulse 2s ease-in-out infinite;
     flex-shrink: 0;
 }
@@ -569,7 +569,7 @@
     border: 1px solid var(--ci-purple-border);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(124,58,237,0.06);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.06);
     height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
@@ -746,10 +746,10 @@
     background: linear-gradient(135deg, var(--ci-purple), var(--ci-purple-hover));
     color: white;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(124,58,237,0.35);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
 }
 
 .ci-finalize-btn.ready:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(124,58,237,0.4);
+    box-shadow: 0 6px 18px rgba(37,99,235,0.3);
 }

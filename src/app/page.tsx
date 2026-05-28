@@ -78,6 +78,15 @@ export default function OperacionesPage() {
       {/* Elementos decorativos de fondo */}
       <div className="bg-blob blob-1" />
       <div className="bg-blob blob-2" />
+      
+      {/* Iconos flotantes decorativos del rubro */}
+      <div className="bg-floating-shapes">
+        <div className="floating-shape shape-beef"><Beef /></div>
+        <div className="floating-shape shape-flame"><Flame /></div>
+        <div className="floating-shape shape-snowflake"><Snowflake /></div>
+        <div className="floating-shape shape-ticket"><Ticket /></div>
+        <div className="floating-grid-mesh"></div>
+      </div>
 
       {/* Indicador de Status y Logout */}
       <div className="op-status-bar">
@@ -93,7 +102,7 @@ export default function OperacionesPage() {
 
       <header className="op-header">
         <div className="op-logo-box">
-          <Beef size={50} strokeWidth={2.5} color='#f6b53b' />
+          <img src="/logo.png" alt="Logo" style={{ width: 50, height: 50, objectFit: 'contain' }} />
         </div>
         <h1 className="op-title">Disprocontrol</h1>
         <p className="op-subtitle">Panel de Control de Operaciones</p>

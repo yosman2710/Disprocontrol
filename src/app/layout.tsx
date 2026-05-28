@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DisproControl",
   description: "Sistema de Control de Operaciones - Disprocar",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

@@ -80,8 +80,8 @@ export default function LoginPage() {
         <div className="login-screen">
             <div className="login-card-container">
                 <header className="login-header">
-                    <div className="login-logo">
-                        <Beef size={32} color="white" />
+                    <div className="login-logo" style={{ background: 'transparent' }}>
+                        <img src="/logo.png" alt="Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} />
                     </div>
                     <h1 className="login-title">DisproControl</h1>
                 </header>

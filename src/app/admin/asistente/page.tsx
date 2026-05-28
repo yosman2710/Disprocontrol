@@ -88,7 +88,7 @@ export default function Chatbot() {
     ];
 
     return (
-        <>
+        <div className="chatbot-page-wrapper">
             <Head>
                 <title>Asistente IA - Carnes del Zulia</title>
             </Head>
@@ -177,6 +177,6 @@ export default function Chatbot() {
                     <p className="footerNote">Datos analizados en tiempo real desde la base de datos de producción.</p>
                 </footer>
             </div>
-        </>
+        </div>
     );
 }

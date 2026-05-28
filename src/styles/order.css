@@ -2,12 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-    --primary-color: #641B2E;
-    --text-color: #1a1a1a;
-    --text-secondary: #718096;
-    --bg-color: hsl(30, 100%, 97%);
+    --primary-color: #2563eb;
+    --text-color: #0f172a;
+    --text-secondary: #475569;
+    --bg-color: transparent;
     --card-bg: white;
-    --border-color: #f6b53b;
+    --border-color: #bfdbfe;
 }
 
 body {

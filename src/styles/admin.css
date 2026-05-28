@@ -2,15 +2,15 @@
 :root {
     --admin-sidebar-width: 260px;
     --admin-sidebar-bg: #1a1a1a;
-    --admin-sidebar-active: #9d174d;
-    /* Granate/Rosa oscuro similar a la imagen */
+    --admin-sidebar-active: #2563eb;
+    /* Azul en vez del rosa oscuro */
     --admin-sidebar-hover: #2d2d2d;
     --admin-text-main: #f8fafc;
     --admin-text-muted: #94a3b8;
     --admin-bg-main: #faf9f6;
     /* Crema muy claro/blanco roto */
     --admin-card-bg: #ffffff;
-    --admin-accent: #9d174d;
+    --admin-accent: #2563eb;
 }
 
 /* Animations */

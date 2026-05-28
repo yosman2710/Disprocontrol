@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 :root {
-    --primary: #f6b53b;
-    --primary-glow: rgba(246, 181, 59, 0.4);
-    --bg-mesh: #f8fafc;
+    --primary: #2563eb;
+    --primary-glow: rgba(37, 99, 235, 0.4);
+    --bg-mesh: #f1f5f9;
     --glass-card: rgba(255, 255, 255, 0.7);
     --glass-card-hover: rgba(255, 255, 255, 0.9);
     --text-dark: #0f172a;
@@ -18,12 +18,14 @@ html, body {
     font-family: 'Outfit', sans-serif;
     background: var(--bg-mesh);
     background: 
-        radial-gradient(at 0% 0%, rgba(246, 181, 59, 0.1) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.05) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(246, 181, 59, 0.05) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(239, 68, 68, 0.05) 0px, transparent 50%),
-        #f8fafc;
-    background-attachment: fixed;
+        radial-gradient(rgba(37, 99, 235, 0.07) 1.5px, transparent 1.5px),
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(99, 179, 237, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+        #f1f5f9;
+    background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    background-attachment: scroll, fixed, fixed, fixed, fixed, fixed;
 }
 
 .op-screen {
@@ -50,8 +52,113 @@ html, body {
     animation: float 20s infinite alternate;
 }
 
-.blob-1 { top: -100px; right: -100px; background: rgba(246, 181, 59, 0.2); }
-.blob-2 { bottom: -150px; left: -100px; background: rgba(139, 92, 246, 0.15); }
+.blob-1 { top: -100px; right: -100px; background: rgba(37, 99, 235, 0.18); }
+.blob-2 { bottom: -150px; left: -100px; background: rgba(14, 165, 233, 0.13); }
+
+/* Floating Shapes & Icons */
+.bg-floating-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.floating-shape {
+    position: absolute;
+    color: rgba(37, 99, 235, 0.12);
+    filter: drop-shadow(0 0 15px rgba(37, 99, 235, 0.1));
+    animation: floatAround 25s infinite ease-in-out alternate;
+}
+
+.floating-shape svg {
+    width: 100%;
+    height: 100%;
+}
+
+.shape-beef {
+    width: 140px;
+    height: 140px;
+    top: 15%;
+    left: 8%;
+    animation-duration: 32s;
+    transform: rotate(15deg);
+}
+
+.shape-flame {
+    width: 120px;
+    height: 120px;
+    bottom: 20%;
+    right: 8%;
+    color: rgba(14, 165, 233, 0.1);
+    animation-duration: 26s;
+    animation-delay: -5s;
+    transform: rotate(-10deg);
+}
+
+.shape-snowflake {
+    width: 95px;
+    height: 95px;
+    top: 50%;
+    left: 12%;
+    color: rgba(99, 102, 241, 0.1);
+    animation-duration: 36s;
+    animation-delay: -2s;
+}
+
+.shape-ticket {
+    width: 110px;
+    height: 110px;
+    top: 22%;
+    right: 14%;
+    color: rgba(37, 99, 235, 0.1);
+    animation-duration: 28s;
+    animation-delay: -8s;
+    transform: rotate(25deg);
+}
+
+/* Tech-grid outline overlay */
+.floating-grid-mesh {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 85%;
+    border: 1px dashed rgba(37, 99, 235, 0.12);
+    border-radius: 40px;
+}
+
+.floating-grid-mesh::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    left: 50%;
+    border-left: 1px dashed rgba(37, 99, 235, 0.08);
+}
+
+.floating-grid-mesh::after {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 50%;
+    border-top: 1px dashed rgba(37, 99, 235, 0.08);
+}
+
+@keyframes floatAround {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-25px) rotate(8deg) scale(1.03);
+    }
+    100% {
+        transform: translateY(15px) rotate(-8deg) scale(0.97);
+    }
+}
+
 
 /* Header */
 .op-header {
@@ -68,7 +175,7 @@ html, body {
     border-radius: 30px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.06);
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(246, 181, 59, 0.3);
+    border: 1px solid rgba(37, 99, 235, 0.2);
     position: relative;
 }
 
@@ -180,9 +287,9 @@ html, body {
     z-index: 1;
 }
 
-.bg-primary { background: linear-gradient(135deg, #f6b53b, #fbbf24); box-shadow: 0 10px 25px rgba(246, 181, 59, 0.4); }
-.bg-destructive { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4); }
-.bg-accent { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+.bg-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); }
+.bg-destructive { background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4); }
+.bg-accent { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
 
 .op-card-title {
     font-size: 1.6rem;
