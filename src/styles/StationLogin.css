@@ -1,12 +1,14 @@
 /* StationLogin.css - Tema Claro Corporativo */
 :root {
-    /* Copiamos las mismas variables para asegurar consistencia */
-    --dispro-bg: hsl(30, 100%, 97%);
+    /* Variables de diseño alineadas con la paleta de colores azul corporativa */
+    --dispro-bg: #f1f5f9;
     --dispro-card: #ffffff;
-    --dispro-border: #fda500;
-    --dispro-text: hsl(0 0% 15%);
-    --dispro-muted: hsl(0 0% 45%);
-    --primary: #f6b53b;
+    --dispro-border: rgba(37, 99, 235, 0.15);
+    --dispro-text: #0f172a;
+    --dispro-muted: #475569;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-glow: rgba(37, 99, 235, 0.2);
     --destructive: hsl(0 72% 51%);
     --info: hsl(180 64% 45%);
     --accent: hsl(264 67% 60%);
@@ -15,14 +17,24 @@
 
 .login-screen {
     min-height: 100vh;
-    background-color: var(--dispro-bg);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
     color: var(--dispro-text);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    
+    /* Fondo con Mesh Radial idéntico al resto de la aplicación */
+    background: 
+        radial-gradient(rgba(37, 99, 235, 0.07) 1.5px, transparent 1.5px),
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(99, 179, 237, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+        #f1f5f9;
+    background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    background-attachment: scroll, fixed, fixed, fixed, fixed, fixed;
 }
 
 .back-btn {
@@ -32,8 +44,8 @@
     background: white;
     border: 1px solid var(--dispro-border);
     color: var(--dispro-text);
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -41,24 +53,25 @@
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
 }
 
 .back-btn:hover {
     transform: translateX(-4px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.1);
 }
 
 .login-card-container {
     width: 100%;
-    max-width: 450px;
+    max-width: 580px; /* Tarjeta aún más grande y espaciosa */
     animation: fadeInScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 @keyframes fadeInScale {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(20px);
+        transform: scale(0.95) translateY(20px);
     }
     to {
         opacity: 1;
@@ -68,35 +81,36 @@
 
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .login-logo {
-    background: var(--primary);
-    width: 60px;
-    height: 60px;
-    border-radius: 1rem;
+    background: white;
+    width: 90px;
+    height: 90px;
+    border-radius: 24px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     color: white;
-    /* Icono blanco */
-    box-shadow: 0 10px 20px rgba(246, 181, 59, 0.3);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
     animation: logoPulse 3s infinite ease-in-out;
 }
 
 @keyframes logoPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 10px 20px rgba(246, 181, 59, 0.3); }
-    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(246, 181, 59, 0.5); }
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15); }
+    50% { transform: scale(1.05); box-shadow: 0 15px 35px rgba(37, 99, 235, 0.25); }
 }
 
 .login-title {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 800;
     text-transform: uppercase;
     margin: 0;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.04em;
+    color: var(--dispro-text);
 }
 
 .station-badge {
@@ -104,18 +118,18 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    padding: 1rem;
-    border-radius: 1rem;
-    margin-bottom: 2rem;
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    margin-bottom: 2.5rem;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Clases de utilidad para colores de fondo (igual que operations.css) */
+/* Clases de utilidad para colores de fondo */
 .bg-primary {
-    background: linear-gradient(135deg, #f6b53b, #f0c24e);
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
 }
 
 .bg-destructive {
@@ -132,17 +146,17 @@
 
 .login-form {
     background: var(--dispro-card);
-    padding: 2.5rem;
-    border-radius: 1.5rem;
+    padding: 3.5rem; /* Más espaciado interno */
+    border-radius: 2rem;
     border: 1px solid var(--dispro-border);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
 }
 
 .form-info {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
     color: var(--dispro-muted);
-    font-size: 0.95rem;
+    font-size: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -150,14 +164,15 @@
 }
 
 .input-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .input-group label {
     font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
     display: block;
+    color: var(--dispro-text);
 }
 
 .input-wrapper {
@@ -166,20 +181,21 @@
 
 .input-icon {
     position: absolute;
-    left: 15px;
+    left: 18px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--dispro-muted);
+    transition: color 0.2s;
 }
 
 .input-wrapper input {
     width: 100%;
-    padding: 12px 15px 12px 45px;
-    background: #fff;
+    padding: 18px 20px 18px 56px; /* Input aún más grande y espacioso */
+    background: #ffffff;
     border: 2px solid #e2e8f0;
-    border-radius: 10px;
+    border-radius: 16px;
     color: var(--dispro-text);
-    font-size: 1rem;
+    font-size: 1.15rem;
     transition: all 0.2s;
     box-sizing: border-box;
 }
@@ -187,12 +203,16 @@
 .input-wrapper input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(246, 181, 59, 0.2);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.input-wrapper input:focus + .input-icon {
+    color: var(--primary);
 }
 
 .toggle-pw {
     position: absolute;
-    right: 15px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -204,28 +224,27 @@
 }
 
 .toggle-pw:hover {
-    color: var(--dispro-text);
+    color: var(--primary);
 }
 
 .login-submit {
     width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, #f6b53b, #f0c24e);
+    padding: 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     color: white;
-    /* Texto blanco en botón primario */
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     cursor: pointer;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(246, 181, 59, 0.4);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
 }
 
 .login-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(246, 181, 59, 0.5);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
 }
 
 .login-submit:active {
@@ -235,10 +254,10 @@
 .error-msg {
     background-color: #fef2f2;
     color: #ef4444;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     border: 1px solid #fecaca;
 }

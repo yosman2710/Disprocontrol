@@ -33,7 +33,7 @@ export function AdminSidebar() {
         <aside className={`admin-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
             <div className="admin-sidebar-header">
                 <div className="admin-logo-small" style={{ background: 'transparent' }}>
-                    <img src="/logo.png" alt="Logo" style={{ width: 28, height: 28, objectFit: 'contain' }} />
+                    <img src="/icon.png" alt="Logo" style={{ width: 28, height: 28, objectFit: 'contain' }} />
                 </div>
                 <div className="header-text" style={{ lineHeight: '1.2' }}>
                     <div style={{ fontWeight: 'bold', fontSize: '16px' }}>Disprocontrol</div>

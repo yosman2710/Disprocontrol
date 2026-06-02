@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "DisproControl",
   description: "Sistema de Control de Operaciones - Disprocar",
   icons: {
-    icon: "/logo.png",
+    icon: "/icon.png",
   },
 };
 

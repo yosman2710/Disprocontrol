@@ -24,7 +24,11 @@ export async function apiFetch(endpoint: string, options: any = {}) {
                 errorData = { message: `Error del servidor (${response.status})` };
             }
 
-            console.error('API Error:', { endpoint, status: response.status, errorData });
+            if (response.status >= 500) {
+                console.error('API Error:', { endpoint, status: response.status, errorData });
+            } else {
+                console.warn('API Warning:', { endpoint, status: response.status, errorData });
+            }
 
             // Si el token es inválido o expiró (401), forzamos cierre de sesión
             // No cerramos sesión si el error es 403 (Forbidden) ya que es un tema de permisos, no de sesión expirada

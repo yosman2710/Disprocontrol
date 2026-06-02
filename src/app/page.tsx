@@ -102,7 +102,7 @@ export default function OperacionesPage() {
 
       <header className="op-header">
         <div className="op-logo-box">
-          <img src="/logo.png" alt="Logo" style={{ width: 50, height: 50, objectFit: 'contain' }} />
+          <img src="/icon.png" alt="Logo" style={{ width: 50, height: 50, objectFit: 'contain' }} />
         </div>
         <h1 className="op-title">Disprocontrol</h1>
         <p className="op-subtitle">Panel de Control de Operaciones</p>
