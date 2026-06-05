@@ -35,6 +35,22 @@ export default function RecepcionPage() {
     // ── EFFECTS ───────────────────────────────────────────────
     useEffect(() => { fetchPendingOrders(); }, []);
 
+    // Auto-select first available tipo_de_res from the order's lote
+    useEffect(() => {
+        if (!selectedOrder) return;
+        const lote = selectedOrder.lote?.length > 0 ? selectedOrder.lote : [
+            { tipo_de_res: 'Novillo' }, { tipo_de_res: 'Novilla' }, { tipo_de_res: 'Torete' },
+            { tipo_de_res: 'Toro' }, { tipo_de_res: 'Buvillo' }, { tipo_de_res: 'Buvilla' }, { tipo_de_res: 'Vaca' }
+        ];
+        const firstAvailable = lote.find((item: any) => {
+            const weighed = carcasses.filter((c: any) => c.tipo_de_res === item.tipo_de_res).length;
+            return !item.cantidad || weighed < item.cantidad;
+        });
+        if (firstAvailable) {
+            setResForm(prev => ({ ...prev, tipo_res: firstAvailable.tipo_de_res }));
+        }
+    }, [selectedOrder, carcasses]);
+
     // ── API ───────────────────────────────────────────────────
     const fetchPendingOrders = async () => {
         setLoading(true);
