@@ -34,7 +34,8 @@ interface OrdenCompra {
 function estadoLabel(estado: string) {
     switch (estado) {
         case 'completado': return { label: 'Completado', color: '#22c55e' };
-        case 'procesando': return { label: 'Procesando', color: '#f59e0b' };
+        case 'procesando':
+        case 'en_proceso': return { label: 'En Proceso', color: '#f59e0b' };
         case 'pendiente': return { label: 'Pendiente', color: '#94a3b8' };
         default: return { label: estado, color: '#94a3b8' };
     }
