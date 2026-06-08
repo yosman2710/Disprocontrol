@@ -214,7 +214,9 @@ body {
 }
 
 .procesando,
-.PROCESANDO {
+.PROCESANDO,
+.en_proceso,
+.EN_PROCESO {
     background: #ebf8ff;
     color: #2b6cb0;
 }
