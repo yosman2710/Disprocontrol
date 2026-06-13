@@ -65,7 +65,7 @@ export default function InventarioPage() {
     });
 
     const totalKilosAlmacen = filteredInventario.reduce((sum, item) => sum + Number(item.peso_total), 0);
-    const totalItemsAlmacen = filteredInventario.reduce((sum, item) => sum + item.cantidad, 0);
+    const totalItemsAlmacen = filteredInventario.reduce((sum, item) => sum + Number(item.cantidad || 1), 0);
 
     const handleRowClick = async (item: InventarioItem) => {
         setSelectedItem(item);
