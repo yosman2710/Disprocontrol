@@ -1,4 +1,4 @@
-export const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://backend-disprocar.onrender.com').replace(/\/$/, '');
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://backend-disprocar.vercel.app').replace(/\/$/, '');
 
 export async function apiFetch(endpoint: string, options: any = {}) {
     const token = typeof window !== 'undefined' ? localStorage.getItem('dispro_token') : null;

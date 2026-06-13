@@ -1,4 +1,5 @@
 import { AdminSidebar } from '@/components/AdminSidebar';
+import { FloatingChatbot } from '@/components/FloatingChatbot';
 import '@/styles/admin.css';
 
 export default function AdminLayout({
@@ -12,6 +13,7 @@ export default function AdminLayout({
             <main style={{ flex: 1, overflowY: 'auto' }}>
                 {children}
             </main>
+            <FloatingChatbot />
         </div>
     );
 }

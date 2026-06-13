@@ -22,7 +22,6 @@ const menuItems = [
     { id: 'proveedores', label: 'Proveedores', icon: Users, path: '/admin/proveedores' },
     { id: 'mataderos', label: 'Mataderos', icon: MapPin, path: '/admin/mataderos' },
     { id: 'estadisticas', label: 'Estadísticas', icon: BarChart3, path: '/admin/estadisticas' },
-    { id: 'asistente', label: 'Asistente IA', icon: MessageSquare, path: '/admin/asistente' },
 ];
 
 export function AdminSidebar() {
