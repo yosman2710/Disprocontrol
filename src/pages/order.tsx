@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../styles/order.css';
 import { StationLogin } from '@/components/stationLogin';
-import { Ticket, ChevronLeft, Loader2, PlusCircle, LayoutDashboard } from 'lucide-react';
+import { Ticket, ChevronLeft, Loader2, PlusCircle, LayoutDashboard, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, handleLogout } from '@/lib/api';
 
 export default function Order() {
     const [orders, setOrders] = useState<any[]>([]);
@@ -204,6 +204,13 @@ export default function Order() {
                         <button className="btnNuevo" onClick={() => setModalNuevo(true)}>
                             <PlusCircle size={20} style={{ marginRight: '8px' }} />
                             Nueva Orden
+                        </button>
+                        <button
+                            className="btnBack"
+                            onClick={handleLogout}
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 22px', fontSize: '0.95rem', backgroundColor: '#fee2e2', color: '#ef4444', border: '1px solid #fca5a5' }}
+                        >
+                            <LogOut size={18} /> Cerrar Sesión
                         </button>
                     </div>
                 </header>
