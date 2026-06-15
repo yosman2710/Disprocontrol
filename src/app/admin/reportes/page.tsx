@@ -118,7 +118,7 @@ export default function ReportesPage() {
                     <p style={{ color: '#888', marginTop: '4px', fontSize: '14px' }}>Visualiza y exporta los datos operativos</p>
                 </div>
                 <button 
-                    onClick={exportToCSV}
+                    onClick={exportToExcel}
                     disabled={data.length === 0 || loading}
                     style={{ 
                         display: 'flex', alignItems: 'center', gap: '8px', 
@@ -128,7 +128,7 @@ export default function ReportesPage() {
                     }}
                 >
                     <Download size={18} />
-                    Exportar CSV
+                    Exportar Excel
                 </button>
             </header>
 
