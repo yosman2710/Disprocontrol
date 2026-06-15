@@ -12,7 +12,8 @@ import {
     MessageSquare,
     Beef,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    FileText
 } from 'lucide-react';
 
 const menuItems = [
@@ -22,6 +23,7 @@ const menuItems = [
     { id: 'proveedores', label: 'Proveedores', icon: Users, path: '/admin/proveedores' },
     { id: 'mataderos', label: 'Mataderos', icon: MapPin, path: '/admin/mataderos' },
     { id: 'estadisticas', label: 'Estadísticas', icon: BarChart3, path: '/admin/estadisticas' },
+    { id: 'reportes', label: 'Reportes', icon: FileText, path: '/admin/reportes' },
 ];
 
 export function AdminSidebar() {
