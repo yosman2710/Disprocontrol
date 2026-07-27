@@ -1,0 +1,220 @@
+.container {
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --emerald-50: #ecfdf5;
+    --emerald-100: #d1fae5;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --card: #ffffff;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --radius: 12px;
+}
+
+.container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.titleIcon {
+    color: var(--emerald-500);
+    background: var(--emerald-50);
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.subtitle {
+    color: var(--slate-500);
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
+}
+
+.exportButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--emerald-500);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.exportButton:hover:not(:disabled) {
+    background-color: var(--emerald-600);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+}
+
+.exportButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--slate-100);
+    padding-bottom: 1rem;
+}
+
+.tabButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    color: var(--slate-500);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tabButton:hover:not(.activeTab) {
+    background-color: var(--slate-100);
+    color: var(--slate-700);
+}
+
+.activeTab {
+    background-color: var(--emerald-50);
+    color: var(--emerald-600);
+    box-shadow: inset 0 0 0 1px var(--emerald-100);
+}
+
+/* Error and Loading */
+.errorContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    border: 1px solid #fecaca;
+    font-weight: 500;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    padding: 4rem;
+}
+
+/* Table Design */
+.tableContainer {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.tableHead {
+    background-color: var(--slate-50);
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.tableHead th {
+    padding: 1rem 1.5rem;
+    color: var(--slate-500);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tableBody tr {
+    border-bottom: 1px solid var(--slate-100);
+    transition: background-color 0.15s ease;
+}
+
+.tableBody tr:last-child {
+    border-bottom: none;
+}
+
+.tableBody tr:hover {
+    background-color: var(--slate-50);
+}
+
+.tableBody td {
+    padding: 1rem 1.5rem;
+    color: var(--slate-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--slate-500);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.emptyStateIcon {
+    color: var(--slate-300);
+    background: var(--slate-50);
+    padding: 1rem;
+    border-radius: 50%;
+}

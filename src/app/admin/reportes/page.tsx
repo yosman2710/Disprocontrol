@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { apiFetch } from '@/lib/api';
 import { Download, Loader2, AlertCircle, FileText, Activity, Layers } from 'lucide-react';
+import styles from '@/styles/Reportes.module.css';
 
 export default function ReportesPage() {
     const [activeTab, setActiveTab] = useState<'mermas' | 'rendimiento' | 'inventario'>('mermas');
@@ -76,27 +77,36 @@ export default function ReportesPage() {
     };
 
     const renderTable = () => {
-        if (data.length === 0) return <div style={{ padding: '40px', textAlign: 'center', color: '#888' }}>No hay datos para este reporte.</div>;
+        if (data.length === 0) {
+            return (
+                <div className={styles.emptyState}>
+                    <div className={styles.emptyStateIcon}>
+                        <FileText size={48} />
+                    </div>
+                    <p>No hay datos disponibles para este reporte.</p>
+                </div>
+            );
+        }
 
         const headers = Object.keys(data[0]);
 
         return (
-            <div style={{ overflowX: 'auto', background: '#1e1e1e', borderRadius: '8px', border: '1px solid #333' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                    <thead style={{ background: '#2d2d2d', borderBottom: '1px solid #444' }}>
+            <div className={styles.tableContainer}>
+                <table className={styles.table}>
+                    <thead className={styles.tableHead}>
                         <tr>
                             {headers.map(h => (
-                                <th key={h} style={{ padding: '12px 16px', color: '#aaa', fontWeight: 600, textTransform: 'capitalize' }}>
+                                <th key={h}>
                                     {h.replace(/_/g, ' ')}
                                 </th>
                             ))}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className={styles.tableBody}>
                         {data.map((row, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid #2d2d2d' }}>
+                            <tr key={i}>
                                 {headers.map(h => (
-                                    <td key={h} style={{ padding: '10px 16px', color: '#e5e5e5' }}>
+                                    <td key={h}>
                                         {row[h]}
                                     </td>
                                 ))}
@@ -109,77 +119,68 @@ export default function ReportesPage() {
     };
 
     return (
-        <div style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto' }}>
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <div>
-                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <FileText /> Reportes del Sistema
-                    </h1>
-                    <p style={{ color: '#888', marginTop: '4px', fontSize: '14px' }}>Visualiza y exporta los datos operativos</p>
-                </div>
-                <button 
-                    onClick={exportToExcel}
-                    disabled={data.length === 0 || loading}
-                    style={{ 
-                        display: 'flex', alignItems: 'center', gap: '8px', 
-                        padding: '10px 16px', background: '#10b981', color: 'white', 
-                        border: 'none', borderRadius: '6px', cursor: (data.length === 0 || loading) ? 'not-allowed' : 'pointer',
-                        fontWeight: 600, opacity: (data.length === 0 || loading) ? 0.6 : 1
-                    }}
-                >
-                    <Download size={18} />
-                    Exportar Excel
-                </button>
-            </header>
+        <>
+            <Head>
+                <title>Reportes - Disprocontrol</title>
+            </Head>
+            <div className={styles.container}>
+                <header className={styles.header}>
+                    <div className={styles.titleWrapper}>
+                        <div className={styles.titleIcon}>
+                            <FileText size={32} />
+                        </div>
+                        <div>
+                            <h1 className={styles.title}>Reportes del Sistema</h1>
+                            <p className={styles.subtitle}>Visualiza y exporta los datos operativos</p>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={exportToExcel}
+                        disabled={data.length === 0 || loading}
+                        className={styles.exportButton}
+                    >
+                        <Download size={18} />
+                        Exportar a Excel
+                    </button>
+                </header>
 
-            {/* Tabs */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
-                <button
-                    onClick={() => setActiveTab('mermas')}
-                    style={{
-                        padding: '10px 20px', background: activeTab === 'mermas' ? '#2d2d2d' : 'transparent',
-                        color: activeTab === 'mermas' ? 'white' : '#888', border: 'none', borderRadius: '6px',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500
-                    }}
-                >
-                    <Activity size={18} /> Reporte de Mermas
-                </button>
-                <button
-                    onClick={() => setActiveTab('rendimiento')}
-                    style={{
-                        padding: '10px 20px', background: activeTab === 'rendimiento' ? '#2d2d2d' : 'transparent',
-                        color: activeTab === 'rendimiento' ? 'white' : '#888', border: 'none', borderRadius: '6px',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500
-                    }}
-                >
-                    <Layers size={18} /> Rendimiento de Desposte
-                </button>
-                <button
-                    onClick={() => setActiveTab('inventario')}
-                    style={{
-                        padding: '10px 20px', background: activeTab === 'inventario' ? '#2d2d2d' : 'transparent',
-                        color: activeTab === 'inventario' ? 'white' : '#888', border: 'none', borderRadius: '6px',
-                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500
-                    }}
-                >
-                    <FileText size={18} /> Stock e Inventario
-                </button>
+                {/* Tabs */}
+                <div className={styles.tabsContainer}>
+                    <button
+                        onClick={() => setActiveTab('mermas')}
+                        className={`${styles.tabButton} ${activeTab === 'mermas' ? styles.activeTab : ''}`}
+                    >
+                        <Activity size={18} /> Reporte de Mermas
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('rendimiento')}
+                        className={`${styles.tabButton} ${activeTab === 'rendimiento' ? styles.activeTab : ''}`}
+                    >
+                        <Layers size={18} /> Rendimiento de Desposte
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('inventario')}
+                        className={`${styles.tabButton} ${activeTab === 'inventario' ? styles.activeTab : ''}`}
+                    >
+                        <FileText size={18} /> Stock e Inventario
+                    </button>
+                </div>
+
+                {error && (
+                    <div className={styles.errorContainer}>
+                        <AlertCircle size={20} />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {loading ? (
+                    <div className={styles.loadingContainer}>
+                        <Loader2 className="animate-spin" size={40} color="var(--emerald-500)" />
+                    </div>
+                ) : (
+                    renderTable()
+                )}
             </div>
-
-            {error && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', marginBottom: '20px' }}>
-                    <AlertCircle size={20} />
-                    <span>{error}</span>
-                </div>
-            )}
-
-            {loading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '60px' }}>
-                    <Loader2 className="animate-spin" size={40} color="#10b981" />
-                </div>
-            ) : (
-                renderTable()
-            )}
-        </div>
+        </>
     );
 }
